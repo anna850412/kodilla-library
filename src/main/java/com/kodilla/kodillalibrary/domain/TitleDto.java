@@ -14,5 +14,5 @@ public class TitleDto {
     private String title;
     private String author;
     private LocalDate publicationYear;
-    private List<BookEntry> bookEntries = new ArrayList<>();
+//    private List<BookEntry> bookEntries = new ArrayList<>();
 }

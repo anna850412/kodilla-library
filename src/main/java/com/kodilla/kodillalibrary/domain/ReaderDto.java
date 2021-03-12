@@ -13,5 +13,5 @@ public class ReaderDto {
     private String Name;
     private String Surname;
     private LocalDate dateOfAccountCreation;
-    private List<BorrowedBooks> borrowedBooks = new ArrayList<>();
+//    private List<BorrowedBooks> borrowedBooks = new ArrayList<>();
 }

@@ -1,6 +1,8 @@
 package com.kodilla.kodillalibrary.repository;
 
 import com.kodilla.kodillalibrary.domain.BookEntry;
+import com.kodilla.kodillalibrary.domain.Status;
+import com.kodilla.kodillalibrary.domain.Title;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
@@ -13,6 +15,6 @@ public interface BookEntryRepository extends CrudRepository<BookEntry, Integer> 
 
     BookEntry findById(Long id);
 
-    List<BookEntry> findByTitleAndStatus(String title, String status);
+    List<BookEntry> findByTitleAndStatus(Title title, Status status);
 
 }

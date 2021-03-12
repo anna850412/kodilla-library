@@ -26,7 +26,7 @@ public class BookEntry {
     private Title title;
 
     @Column(name = "STATUS")
-    private String status;
+    private Status status;
 
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
