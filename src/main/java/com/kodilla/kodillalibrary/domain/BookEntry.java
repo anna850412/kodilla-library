@@ -36,5 +36,8 @@ public class BookEntry {
     )
     private List<BorrowedBooks> borrowedBooks = new ArrayList<>();
 
-
+    public BookEntry(Title title, Status status) {
+        this.title = title;
+        this.status = status;
+    }
 }

@@ -1,10 +1,7 @@
 package com.kodilla.kodillalibrary.domain;
 
 import com.sun.istack.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -24,11 +21,21 @@ public class BorrowedBooks {
     private Long id;
     @ManyToMany(cascade = CascadeType.ALL, mappedBy = "borrowedBooks")
     private List<BookEntry> bookEntries = new ArrayList<>();
-    @ManyToMany(cascade = CascadeType.ALL, mappedBy = "borrowedBooks")
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "READER_ID")
     private List<Reader> readers = new ArrayList<>();
     @Column(name = "DATE_OF_RENTAL")
-    private LocalDate dateOfRental;
+    private final LocalDate dateOfRental = null;
     @Column(name = "DATE_OF_RETURN")
     private LocalDate dateOfReturn;
 
+    public BorrowedBooks(List<BookEntry> bookEntries, Reader reader, LocalDate of, LocalDate of1) {
+    }
+
+    public BorrowedBooks(Long id, List<BookEntry> bookEntries, List<Reader> readers, LocalDate dateOfRental, LocalDate dateOfReturn) {
+    }
+
+    public void setReaders(List<Reader> readers) {
+        this.readers = readers;
+    }
 }

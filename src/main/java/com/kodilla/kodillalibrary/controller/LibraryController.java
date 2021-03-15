@@ -47,26 +47,26 @@ public class LibraryController {
         service.saveBookEntry(bookEntry);
     }
 
-    @PostMapping(value = "createBookEntry2")
-    public void createBookEntry(@RequestParam Long id, String status) {
-        BookEntry bookEntry = new BookEntry();
-        bookEntry.setTitle(service.findTitleById(id));
-        bookEntry.setStatus(Status.valueOf(status));
-        service.saveBookEntry(bookEntry);
-    }
-
-    @PutMapping(value = "updateStatus")
-    public void findBookEntryByStatus(@RequestParam String status, Long id) {
-        BookEntry bookEntry = new BookEntry();
-        bookEntry.setTitle(service.findTitleById(id));
-        service.setBookEntryStatus(Status.valueOf(status), id);
-    }
-//    @PutMapping(value = "updateStatus", consumes = MediaType.APPLICATION_JSON_VALUE)
-//    public BookEntryDto updateStatus(@RequestBody BookEntryDto bookEntryDto){
-//        BookEntry bookEntry = bookEntryMapper.mapToBookEntry(bookEntryDto);
-//        BookEntry savedStatus = service.saveBookEntry(bookEntry);
-//        return bookEntryMapper.mapToBookEntryDto(savedStatus);
+//    @PostMapping(value = "createBookEntry2")
+//    public void createBookEntry(@RequestParam Long id, String status) {
+//        BookEntry bookEntry = new BookEntry();
+//        bookEntry.setTitle(service.findTitleById(id));
+//        bookEntry.setStatus(Status.valueOf(status));
+//        service.saveBookEntry(bookEntry);
 //    }
+
+//    @PutMapping(value = "updateStatus")
+//    public void findBookEntryByStatus(@RequestParam String status, Long id) {
+//        BookEntry bookEntry = new BookEntry();
+//        bookEntry.setTitle(service.findTitleById(id));
+//        service.setBookEntryStatus(Status.valueOf(status), id);
+//    }
+    @PutMapping(value = "updateStatus", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public BookEntryDto updateStatus(@RequestBody BookEntryDto bookEntryDto){
+        BookEntry bookEntry = bookEntryMapper.mapToBookEntry(bookEntryDto);
+        BookEntry savedStatus = service.saveBookEntry(bookEntry);
+        return bookEntryMapper.mapToBookEntryDto(savedStatus);
+    }
 
     @GetMapping(value = "howManyBookEntriesAreAvailable")
     public Long howManyBookEntriesAreAvailable(@RequestParam Long id) {

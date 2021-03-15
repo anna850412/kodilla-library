@@ -4,9 +4,6 @@ import com.kodilla.kodillalibrary.domain.BookEntry;
 import com.kodilla.kodillalibrary.domain.BookEntryDto;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 @Service
 public class BookEntryMapper {
     public BookEntry mapToBookEntry(BookEntryDto bookEntryDto) {
@@ -21,15 +18,20 @@ public class BookEntryMapper {
 //        bookEntryDto.getBorrowedBooks()
 //        );
     }
-//    public BookEntryDto mapToBookEntryDto(final BookEntry bookEntry){
-//
+
+    public BookEntryDto mapToBookEntryDto(final BookEntry bookEntry) {
+        BookEntryDto bookEntryDto = new BookEntryDto();
+        bookEntryDto.setTitle(bookEntry.getTitle());
+        bookEntryDto.setStatus(bookEntry.getStatus());
+        return bookEntryDto;
+
 //        return new BookEntryDto(
 //                bookEntry.getId(),
 //                bookEntry.getTitle(),
 //                bookEntry.getStatus(),
 //                bookEntry.getBorrowedBooks()
 //        );
-//    }
+    }
 //    public List<BookEntryDto> mapToBookEntryDtoList(final List<BookEntry> bookEntryList){
 //        return bookEntryList.stream()
 //                .map(this::mapToBookEntryDto)

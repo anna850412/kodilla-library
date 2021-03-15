@@ -38,4 +38,10 @@ public class Title {
             fetch = FetchType.EAGER
     )
     private List<BookEntry> bookEntries = new ArrayList<>();
+
+    public Title(String title, String author, LocalDate publicationYear) {
+        this.title = title;
+        this.author = author;
+        this.publicationYear = publicationYear;
+    }
 }

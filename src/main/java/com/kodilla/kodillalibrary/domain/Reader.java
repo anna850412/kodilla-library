@@ -4,13 +4,13 @@ import com.sun.istack.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-//@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity(name = "READERS")
@@ -65,12 +65,18 @@ public class Reader {
         this.dateOfAccountCreation = dateOfAccountCreation;
     }
 
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(
-            name = "JOIN_READERS_BORROWED_BOOKS",
-            joinColumns = {@JoinColumn(name = "READERS_ID", referencedColumnName = "READER_ID")},
-            inverseJoinColumns = {@JoinColumn(name = "BORROWED_BOOKS_ID", referencedColumnName = "BORROWED_BOOKS_ID")}
-    )
+//    @ManyToMany(cascade = CascadeType.ALL)
+//    @JoinTable(
+//            name = "JOIN_READERS_BORROWED_BOOKS",
+//            joinColumns = {@JoinColumn(name = "READERS_ID", referencedColumnName = "READER_ID")},
+//            inverseJoinColumns = {@JoinColumn(name = "BORROWED_BOOKS_ID", referencedColumnName = "BORROWED_BOOKS_ID")}
+//    )
+    @OneToMany(
+            targetEntity = BorrowedBooks.class,
+            mappedBy = "readers",
+            cascade = CascadeType.ALL,
+            fetch = FetchType.EAGER
+            )
     public List<BorrowedBooks> getBorrowedBooks() {
         return borrowedBooks;
     }
