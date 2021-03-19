@@ -4,6 +4,8 @@ import com.kodilla.kodillalibrary.domain.BookEntry;
 import com.kodilla.kodillalibrary.domain.Reader;
 import com.kodilla.kodillalibrary.domain.Status;
 import com.kodilla.kodillalibrary.domain.Title;
+import com.kodilla.kodillalibrary.exception.BookNotExistException;
+import com.kodilla.kodillalibrary.exception.BorrowedBookNotExistException;
 import com.kodilla.kodillalibrary.repository.BookEntryRepository;
 import com.kodilla.kodillalibrary.repository.BorrowedBooksRepository;
 import com.kodilla.kodillalibrary.repository.ReaderRepository;
@@ -12,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -21,9 +24,10 @@ public class DbService {
     private final ReaderRepository readerRepository;
     private final TitleRepository titleRepository;
 
-    public List<Title> findAll(){
+    public List<Title> findAll() {
         return titleRepository.findAll();
     }
+
     public Title saveTitle(final Title title) {
         return titleRepository.save(title);
     }
@@ -35,29 +39,37 @@ public class DbService {
     public BookEntry saveBookEntry(final BookEntry bookEntry) {
         return bookEntryRepository.save(bookEntry);
     }
-    public Title findTitleById(Long id){
+
+    public Optional<Title> findTitleById(Long id) {
         return titleRepository.findById(id);
     }
 
-    public void setBookEntryStatus(Status status, Long id) {
-        bookEntryRepository.findById(id).setStatus(status);
+    public void setBookEntryStatus(Status status, Long id) throws BookNotExistException{
+        bookEntryRepository.findById(id).stream()
+                .findFirst()
+                .orElseThrow(()->new BookNotExistException("Book does not exist"))
+                .setStatus(status);
+
     }
 
     //    sprawdzenie ilości egzemplarzy danego tytułu dostępnych do wypożyczenia,
-    public Long getNumberOfAvailableBooksByTitle(Title title) {
+    public Long getNumberOfAvailableBooksByTitle(Optional<Title> title) {
         return bookEntryRepository.findByTitleAndStatus(title, Status.AVAILABLE).stream().count();
     }
 
     //    wypożyczenie książki,
-    public void findAvailableBooksToBeBorrowedByTitle(Title title) {
+    public void findAvailableBooksToBeBorrowedByTitle(Optional<Title> title) throws BookNotExistException {
         bookEntryRepository.findByTitleAndStatus(title, Status.AVAILABLE).stream()
                 .findFirst()
-                .orElseGet(null)
+                .orElseThrow(()->new BookNotExistException("Book does not exist"))
                 .setStatus(Status.BORROWED);
     }
 
     //    zwrot książki.
-    public void findBorrowedBooksById(Long id) {
-        bookEntryRepository.findById(id).setStatus(Status.AVAILABLE);
+    public void returnBorrowedBooksById(Long id) throws BorrowedBookNotExistException{
+        bookEntryRepository.findById(id).stream()
+                .findFirst()
+                .orElseThrow(()->new BorrowedBookNotExistException("Borrowed book does not exist"))
+                .setStatus(Status.AVAILABLE);
     }
 }

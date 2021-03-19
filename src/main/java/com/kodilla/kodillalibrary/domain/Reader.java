@@ -71,12 +71,14 @@ public class Reader {
 //            joinColumns = {@JoinColumn(name = "READERS_ID", referencedColumnName = "READER_ID")},
 //            inverseJoinColumns = {@JoinColumn(name = "BORROWED_BOOKS_ID", referencedColumnName = "BORROWED_BOOKS_ID")}
 //    )
+//    @ManyToOne(cascade = CascadeType.ALL)
+//    @JoinColumn(name = "BORROWED_BOOKS_ID")
     @OneToMany(
             targetEntity = BorrowedBooks.class,
             mappedBy = "readers",
             cascade = CascadeType.ALL,
-            fetch = FetchType.EAGER
-            )
+            fetch = FetchType.LAZY
+    )
     public List<BorrowedBooks> getBorrowedBooks() {
         return borrowedBooks;
     }

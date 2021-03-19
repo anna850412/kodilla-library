@@ -21,7 +21,7 @@ public class BookEntry {
     @Column(name = "BOOK_ENTRY_ID",unique = true)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "TITLE_ID")
     private Title title;
 

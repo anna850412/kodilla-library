@@ -5,7 +5,7 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface ReaderRepository extends CrudRepository <Reader, Integer> {
+public interface ReaderRepository extends CrudRepository <Reader, Long> {
     @Override
     Reader save(Reader reader);
 }

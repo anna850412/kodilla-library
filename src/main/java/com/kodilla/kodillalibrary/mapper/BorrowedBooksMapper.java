@@ -2,6 +2,7 @@ package com.kodilla.kodillalibrary.mapper;
 
 import com.kodilla.kodillalibrary.domain.BorrowedBooks;
 import com.kodilla.kodillalibrary.domain.BorrowedBooksDto;
+import com.kodilla.kodillalibrary.domain.Reader;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,7 +23,7 @@ public class BorrowedBooksMapper {
         return new BorrowedBooksDto(
                 borrowedBooks.getId(),
                 borrowedBooks.getBookEntries(),
-                borrowedBooks.getReaders(),
+                (List<Reader>) borrowedBooks.getReaders(),
                 borrowedBooks.getDateOfRental(),
                 borrowedBooks.getDateOfReturn()
         );

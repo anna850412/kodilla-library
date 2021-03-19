@@ -5,7 +5,7 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface BorrowedBooksRepository extends CrudRepository <BorrowedBooks, Integer> {
+public interface BorrowedBooksRepository extends CrudRepository <BorrowedBooks, Long> {
     @Override
     BorrowedBooks save(BorrowedBooks borrowedBooks);
 }
