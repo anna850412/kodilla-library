@@ -11,12 +11,7 @@ public class BookEntryMapper {
         bookEntry.setTitle(bookEntryDto.getTitle());
         bookEntry.setStatus(bookEntryDto.getStatus());
         return bookEntry;
-//        return new BookEntry(
-//                bookEntryDto.getId(),
-//        bookEntryDto.getTitle(),
-//        bookEntryDto.getStatus(),
-//        bookEntryDto.getBorrowedBooks()
-//        );
+
     }
 
     public BookEntryDto mapToBookEntryDto(final BookEntry bookEntry) {

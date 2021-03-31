@@ -13,7 +13,8 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity(name ="BOOK_ENTRIES")
+@Entity
+@Table(name ="BOOK_ENTRIES")
 public class BookEntry {
     @Id
     @GeneratedValue
@@ -21,23 +22,26 @@ public class BookEntry {
     @Column(name = "BOOK_ENTRY_ID",unique = true)
     private Long id;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "TITLE_ID")
     private Title title;
 
     @Column(name = "STATUS")
     private Status status;
+//    @Column(name = "READER_ID")
+//    private Reader readerId;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinTable(
             name = "JOIN_BOOK_ENTRIES_BORROWED_BOOKS",
-            joinColumns = {@JoinColumn(name = "BOOK_ENTRIES_ID", referencedColumnName = "BOOK_ENTRY_ID")},
+            joinColumns = {@JoinColumn(name = "BOOK_ENTRY_ID", referencedColumnName = "BOOK_ENTRY_ID")},
             inverseJoinColumns = {@JoinColumn(name = "BORROWED_BOOKS_ID", referencedColumnName = "BORROWED_BOOKS_ID")}
     )
-    private List<BorrowedBooks> borrowedBooks = new ArrayList<>();
+    private List<BorrowedBooks> borrowedBooks;
 
-    public BookEntry(Title title, Status status) {
-        this.title = title;
-        this.status = status;
-    }
+
+//    public BookEntry(Title title, Status status) {
+//        this.title = title;
+//        this.status = status;
+//    }
 }

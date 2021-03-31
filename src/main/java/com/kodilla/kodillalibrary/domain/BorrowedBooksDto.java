@@ -11,7 +11,7 @@ import java.util.List;
 public class BorrowedBooksDto {
     private Long id;
     private List<BookEntry> bookEntries = new ArrayList<>();
-    private List<Reader> readers = new ArrayList<>();
+    private Reader readers;
     private LocalDate dateOfRental;
     private LocalDate dateOfReturn;
 }

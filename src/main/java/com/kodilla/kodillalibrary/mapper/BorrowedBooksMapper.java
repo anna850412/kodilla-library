@@ -23,7 +23,7 @@ public class BorrowedBooksMapper {
         return new BorrowedBooksDto(
                 borrowedBooks.getId(),
                 borrowedBooks.getBookEntries(),
-                (List<Reader>) borrowedBooks.getReaders(),
+                borrowedBooks.getReaders(),
                 borrowedBooks.getDateOfRental(),
                 borrowedBooks.getDateOfReturn()
         );

@@ -19,29 +19,25 @@ public class Title {
     @Id
     @GeneratedValue
     @NotNull
-    @Column(name = "title_id", unique = true)
-    private Long id;
+    @Column(name = "TITLE_ID", unique = true)
+        private Long id;
+    @Column(name = "BOOKENTRYID")
+    private Long BookEntryId;
     @NotNull
-    @Column(name = "title")
+    @Column(name = "TITLE")
     private String title;
     @NotNull
-    @Column(name = "author")
+    @Column(name = "AUTHOR")
     private String author;
     @NotNull
-    @Column(name = "publicationYear")
+    @Column(name = "PUBLICATIONYEAR")
     private LocalDate publicationYear;
-
     @OneToMany(
             targetEntity = BookEntry.class,
             mappedBy = "title",
             cascade = CascadeType.ALL,
-            fetch = FetchType.EAGER
+            fetch = FetchType.LAZY
     )
-    private List<BookEntry> bookEntries = new ArrayList<>();
+    private List<BookEntry> bookEntries;
 
-    public Title(String title, String author, LocalDate publicationYear) {
-        this.title = title;
-        this.author = author;
-        this.publicationYear = publicationYear;
-    }
 }

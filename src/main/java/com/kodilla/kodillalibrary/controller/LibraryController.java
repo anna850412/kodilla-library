@@ -3,7 +3,9 @@ package com.kodilla.kodillalibrary.controller;
 import com.kodilla.kodillalibrary.domain.*;
 import com.kodilla.kodillalibrary.exception.BookNotExistException;
 import com.kodilla.kodillalibrary.exception.BorrowedBookNotExistException;
+import com.kodilla.kodillalibrary.exception.ReturnBookNotExistException;
 import com.kodilla.kodillalibrary.mapper.BookEntryMapper;
+import com.kodilla.kodillalibrary.mapper.BorrowedBooksMapper;
 import com.kodilla.kodillalibrary.mapper.ReaderMapper;
 import com.kodilla.kodillalibrary.mapper.TitleMapper;
 import com.kodilla.kodillalibrary.service.DbService;
@@ -13,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.TimerTask;
 
 @RestController
 @RequestMapping("/v1/library")
@@ -24,10 +25,11 @@ public class LibraryController {
     private final BookEntryMapper bookEntryMapper;
     private final ReaderMapper readerMapper;
     private final TitleMapper titleMapper;
+    private final BorrowedBooksMapper borrowedBooksMapper;
 
     @GetMapping(value = "findAll")
-    public List<Title> findAll() {
-        return service.findAll();
+    public List<TitleDto> findAll() {
+        return titleMapper.mapToTitlesDto(service.findAll());
     }
 
     @PostMapping(value = "createReader", consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -41,21 +43,31 @@ public class LibraryController {
         Title title = titleMapper.mapToTitle(titleDto);
         service.saveTitle(title);
     }
+    @PostMapping(value = "createBorrowedBooks", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public void createBorrowedBooks(@RequestBody BorrowedBooksDto borrowedBooksDto) {
+        BorrowedBooks borrowedBooks = borrowedBooksMapper.mapToBorrowedBooks(borrowedBooksDto);
+        service.saveBorrowedBooks(borrowedBooks);
+    }
 
     @PostMapping(value = "createBookEntry", consumes = MediaType.APPLICATION_JSON_VALUE)
     public void createBookEntry(@RequestBody BookEntryDto bookEntryDto) {
         BookEntry bookEntry = bookEntryMapper.mapToBookEntry(bookEntryDto);
-        Title title = bookEntryDto.getTitle();
-        service.saveTitle(title);
         service.saveBookEntry(bookEntry);
     }
 
     @PutMapping(value = "updateStatus", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public BookEntryDto updateStatus(@RequestBody BookEntryDto bookEntryDto){
+    public BookEntryDto updateStatus(@RequestBody BookEntryDto bookEntryDto) {
         BookEntry bookEntry = bookEntryMapper.mapToBookEntry(bookEntryDto);
         BookEntry savedStatus = service.saveBookEntry(bookEntry);
+
         return bookEntryMapper.mapToBookEntryDto(savedStatus);
     }
+//    @PutMapping(value = "updateStatus2", consumes = MediaType.APPLICATION_JSON_VALUE)
+//    public void updateStatus2(@RequestBody BookEntryDto bookEntryDto) throws BookNotExistException {
+//        BookEntry bookEntry = bookEntryMapper.mapToBookEntry(bookEntryDto);
+//        Status updatedStatus = Status.AVAILABLE;
+//        service.setBookEntryStatus(updatedStatus, bookEntry.getId());
+//    }
 
     @GetMapping(value = "howManyBookEntriesAreAvailable")
     public Long howManyBookEntriesAreAvailable(@RequestParam Long id) {
@@ -70,32 +82,7 @@ public class LibraryController {
     }
 
     @PutMapping(value = "returnOfBook", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public void returnOfBook(@RequestBody BorrowedBooksDto borrowedBooksDto) throws BorrowedBookNotExistException {
-        service.returnBorrowedBooksById(borrowedBooksDto.getId());
+    public void returnOfBook(@RequestBody ReturnBookDto returnBookDto) throws ReturnBookNotExistException {
+        service.returnBook(returnBookDto);
     }
-//    @PutMapping(value = "bookRental")
-//    public void rentABook(@RequestParam Long id) {
-//        Optional<Title> titleById = service.findTitleById(id);
-//        service.findAvailableBooksToBeBorrowedByTitle(titleById);
-//    }
-//
-//    @PutMapping(value = "returnOfBook")
-//    public void returnOfBook(@RequestParam Long id) {
-//        service.findBorrowedBooksById(id);
-//    }
-
-    //    @PostMapping(value = "createBookEntry2")
-//    public void createBookEntry(@RequestParam Long id, String status) {
-//        BookEntry bookEntry = new BookEntry();
-//        bookEntry.setTitle(service.findTitleById(id));
-//        bookEntry.setStatus(Status.valueOf(status));
-//        service.saveBookEntry(bookEntry);
-//    }
-
-//    @PutMapping(value = "updateStatus")
-//    public void findBookEntryByStatus(@RequestParam String status, Long id) {
-//        BookEntry bookEntry = new BookEntry();
-//        bookEntry.setTitle(service.findTitleById(id));
-//        service.setBookEntryStatus(Status.valueOf(status), id);
-//    }
 }

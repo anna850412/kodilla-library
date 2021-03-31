@@ -13,13 +13,14 @@ import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity(name = "READERS")
+@Entity
+@Table(name = "READERS")
 public class Reader {
 
 
     private Long id;
-    private String Name;
-    private String Surname;
+    private String name;
+    private String surname;
     private LocalDate dateOfAccountCreation;
     private List<BorrowedBooks> borrowedBooks = new ArrayList<>();
 
@@ -38,21 +39,21 @@ public class Reader {
     @NotNull
     @Column(name = "NAME")
     public String getName() {
-        return Name;
+        return name;
     }
 
     public void setName(String name) {
-        Name = name;
+        this.name = name;
     }
 
     @NotNull
     @Column(name = "SURNAME")
     public String getSurname() {
-        return Surname;
+        return surname;
     }
 
     public void setSurname(String surname) {
-        Surname = surname;
+        this.surname = surname;
     }
 
     @NotNull
@@ -65,14 +66,6 @@ public class Reader {
         this.dateOfAccountCreation = dateOfAccountCreation;
     }
 
-//    @ManyToMany(cascade = CascadeType.ALL)
-//    @JoinTable(
-//            name = "JOIN_READERS_BORROWED_BOOKS",
-//            joinColumns = {@JoinColumn(name = "READERS_ID", referencedColumnName = "READER_ID")},
-//            inverseJoinColumns = {@JoinColumn(name = "BORROWED_BOOKS_ID", referencedColumnName = "BORROWED_BOOKS_ID")}
-//    )
-//    @ManyToOne(cascade = CascadeType.ALL)
-//    @JoinColumn(name = "BORROWED_BOOKS_ID")
     @OneToMany(
             targetEntity = BorrowedBooks.class,
             mappedBy = "readers",

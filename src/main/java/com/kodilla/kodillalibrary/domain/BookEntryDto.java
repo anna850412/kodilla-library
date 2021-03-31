@@ -12,5 +12,4 @@ public class BookEntryDto {
     private Long id;
     private Title title;
     private Status status;
-//    private List<BorrowedBooks> borrowedBooks = new ArrayList<>();
 }
