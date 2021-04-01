@@ -1,27 +1,30 @@
 package com.kodilla.kodillalibrary.domain;
 
-import com.kodilla.kodillalibrary.repository.BorrowedBooksRepository;
 import com.sun.istack.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.data.jpa.repository.Modifying;
 
 import javax.persistence.*;
-import javax.transaction.Transactional;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 //zwrot książki mając readerId i bookEntryId
 
+//@NamedNativeQuery(
+//        name = "BorrowedBooks.returnBook",
+//        query = "UPDATE BOOK_ENTRIES " +
+//                "SET STATUS = Status.AVAILABLE " +
+//                "WHERE READERS.READER_ID = readerId AND BOOK_ENTRY_ID = bookEntryId",
+//        resultClass = BorrowedBooks.class
+//)
 @NamedNativeQuery(
-        name = "BorrowedBooks.returnBook",
-        query = "UPDATE BORROWED_BOOKS " +
-                "SET STATUS = Status.AVAILABLE " +
-                "WHERE READER_ID = readerId AND BOOK_ENTRY_ID = bookEntryId",
-         resultClass = BorrowedBooks.class
+        name = "BorrowedBooks.bookRental",
+        query = "UPDATE BOOK_ENTRIES " +
+                "SET STATUS = Status.BORROWED " +
+                "WHERE READERS.READER_ID = readerId AND BOOK_ENTRIES.TITLE_ID = titleId",
+        resultClass = BorrowedBooks.class
 )
 @Getter
 @Setter

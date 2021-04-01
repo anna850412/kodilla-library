@@ -57,13 +57,12 @@ public class DbService {
     public Long getNumberOfAvailableBooksByTitle(Optional<Title> title) {
         return bookEntryRepository.findByTitleAndStatus(title, Status.AVAILABLE).stream().count();
     }
-    public Long returnBook(ReturnBookDto returnBookDto){
-       if (readerRepository.existsById(returnBookDto.getReaderId())&&
-               bookEntryRepository.existsById(returnBookDto.getBookEntryId())){
-           borrowedBooksRepository.returnBook(returnBookDto.getReaderId(), returnBookDto.getBookEntryId());
-       };
-       return borrowedBooksRepository.returnBook(returnBookDto.getReaderId(), returnBookDto.getBookEntryId());
-    }
+//    public void returnBook(ReturnBookDto returnBookDto){
+//       if (readerRepository.existsById(returnBookDto.getReaderId())&&
+//               bookEntryRepository.existsById(returnBookDto.getBookEntryId())){
+//           borrowedBooksRepository.returnBook(returnBookDto.getReaderId(), returnBookDto.getBookEntryId());
+//       };
+//    }
 
     //    wypożyczenie książki,
     public void findAvailableBooksToBeBorrowedByTitle(Optional<Title> title) throws BookNotExistException {
@@ -71,6 +70,23 @@ public class DbService {
                 .findFirst()
                 .orElseThrow(() -> new BookNotExistException("Book does not exist"))
                 .setStatus(Status.BORROWED);
+    }
+    public void bookRental(BookRentalDto bookRentalDto){
+        if(readerRepository.existsById(bookRentalDto.getReaderId())&&
+        bookEntryRepository.existsById(bookRentalDto.getTitleId())){
+//     jak skorzystać z metody wyszukania po title i status?
+            //     bookEntryRepository.findByTitleAndStatus(bookRentalDto.getTitle(),Status.AVAILABLE)
+        borrowedBooksRepository.bookRental(bookRentalDto.getReaderId(), bookRentalDto.getTitleId());
+// jak teraz zmienić status na Borrowed (jak w findAvailableBooksToBeBorrowedByTitle)
+// bookEntryRepository.findByTitleAndStatus(bookRentalDto.getTitle(), )
+        }
+    }
+
+    public void returnBorrowedBooksById(Long id) throws BorrowedBookNotExistException {
+        bookEntryRepository.findById(id).stream()
+                .findFirst()
+                .orElseThrow(() -> new BorrowedBookNotExistException("Borrowed book does not exist"))
+                .setStatus(Status.AVAILABLE);
     }
     //    wypożyczenie książki po titleId i readerId
 //    public void findAvailableBooksToBeBorrowedByTitleIdAndReaderId(Optional<Title> titleId, Optional<Reader> readerId)
@@ -80,12 +96,4 @@ public class DbService {
 //                .orElseThrow(() -> new BookNotExistException("Book does not exist"))
 //                .setStatus(Status.BORROWED);
 //    }
-
-    //    zwrot książki.
-    public void returnBorrowedBooksById(Long id) throws BorrowedBookNotExistException {
-        bookEntryRepository.findById(id).stream()
-                .findFirst()
-                .orElseThrow(() -> new BorrowedBookNotExistException("Borrowed book does not exist"))
-                .setStatus(Status.AVAILABLE);
-    }
 }

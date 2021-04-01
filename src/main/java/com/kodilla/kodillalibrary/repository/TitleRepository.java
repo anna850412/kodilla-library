@@ -14,6 +14,6 @@ public interface TitleRepository extends CrudRepository<Title, Long> {
     Title save(Title title);
     @Override
     List<Title> findAll();
-
+//    Title findByTitle();
     Optional<Title> findById(Long id);
 }

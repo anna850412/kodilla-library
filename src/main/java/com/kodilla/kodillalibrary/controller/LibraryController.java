@@ -75,14 +75,17 @@ public class LibraryController {
         return service.getNumberOfAvailableBooksByTitle(titleById);
     }
 
+//    @PutMapping(value = "bookRental", consumes = MediaType.APPLICATION_JSON_VALUE)
+//    public void rentABook(@RequestBody TitleDto titleDto) throws BookNotExistException {
+//        Optional<Title> titleById = service.findTitleById(titleDto.getId());
+//        service.findAvailableBooksToBeBorrowedByTitle(titleById);
+//    }
     @PutMapping(value = "bookRental", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public void rentABook(@RequestBody TitleDto titleDto) throws BookNotExistException {
-        Optional<Title> titleById = service.findTitleById(titleDto.getId());
-        service.findAvailableBooksToBeBorrowedByTitle(titleById);
+    public void rentABook(@RequestBody BookRentalDto bookRentalDto) throws BookNotExistException {
+       service.bookRental(bookRentalDto);
     }
-
-    @PutMapping(value = "returnOfBook", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public void returnOfBook(@RequestBody ReturnBookDto returnBookDto) throws ReturnBookNotExistException {
-        service.returnBook(returnBookDto);
-    }
+//    @PutMapping(value = "returnOfBook", consumes = MediaType.APPLICATION_JSON_VALUE)
+//    public void returnOfBook(@RequestBody ReturnBookDto returnBookDto) throws ReturnBookNotExistException {
+//        service.returnBook(returnBookDto);
+//    }
 }

@@ -3,9 +3,9 @@ package com.kodilla.kodillalibrary.domain;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-@AllArgsConstructor
 @Getter
-public class ReturnBookDto {
+@AllArgsConstructor
+public class BookRentalDto {
     private Long readerId;
-    private Long bookEntryId;
+    private Long titleId;
 }
