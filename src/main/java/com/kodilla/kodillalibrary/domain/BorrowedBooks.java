@@ -12,18 +12,18 @@ import java.util.List;
 
 //zwrot książki mając readerId i bookEntryId
 
-//@NamedNativeQuery(
-//        name = "BorrowedBooks.returnBook",
-//        query = "UPDATE BOOK_ENTRIES " +
-//                "SET STATUS = Status.AVAILABLE " +
-//                "WHERE READERS.READER_ID = readerId AND BOOK_ENTRY_ID = bookEntryId",
-//        resultClass = BorrowedBooks.class
-//)
+@NamedNativeQuery(
+        name = "BorrowedBooks.returnBook",
+        query = "UPDATE BOOK_ENTRIES " +
+                "SET STATUS = Status.AVAILABLE " +
+                "WHERE READERS.READER_ID = :readerId AND BOOK_ENTRY_ID = :bookEntryId",
+        resultClass = BorrowedBooks.class
+)
 @NamedNativeQuery(
         name = "BorrowedBooks.bookRental",
         query = "UPDATE BOOK_ENTRIES " +
                 "SET STATUS = Status.BORROWED " +
-                "WHERE READERS.READER_ID = readerId AND BOOK_ENTRIES.TITLE_ID = titleId",
+                "WHERE READERS.READER_ID = :readerId AND BOOK_ENTRIES.TITLE_ID = :titleId",
         resultClass = BorrowedBooks.class
 )
 @Getter

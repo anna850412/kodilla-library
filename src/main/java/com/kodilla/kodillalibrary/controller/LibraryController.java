@@ -84,8 +84,9 @@ public class LibraryController {
     public void rentABook(@RequestBody BookRentalDto bookRentalDto) throws BookNotExistException {
        service.bookRental(bookRentalDto);
     }
-//    @PutMapping(value = "returnOfBook", consumes = MediaType.APPLICATION_JSON_VALUE)
-//    public void returnOfBook(@RequestBody ReturnBookDto returnBookDto) throws ReturnBookNotExistException {
-//        service.returnBook(returnBookDto);
-//    }
+
+    @PutMapping(value = "returnOfBook", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public void returnOfBook(@RequestBody ReturnBookDto returnBookDto) throws ReturnBookNotExistException {
+        service.returnBook(returnBookDto);
+    }
 }

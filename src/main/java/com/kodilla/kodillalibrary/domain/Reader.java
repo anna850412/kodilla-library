@@ -24,6 +24,32 @@ public class Reader {
     private LocalDate dateOfAccountCreation;
     private List<BorrowedBooks> borrowedBooks = new ArrayList<>();
 
+    @Override
+    public int hashCode() {
+        int result = getId() != null ? getId().hashCode() : 0;
+        result = 31 * result + (getName() != null ? getName().hashCode() : 0);
+        result = 31 * result + (getSurname() != null ? getSurname().hashCode() : 0);
+        result = 31 * result + (getDateOfAccountCreation() != null ? getDateOfAccountCreation().hashCode() : 0);
+        result = 31 * result + (getBorrowedBooks() != null ? getBorrowedBooks().hashCode() : 0);
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Reader)) return false;
+
+        Reader reader = (Reader) o;
+
+        if (getId() != null ? !getId().equals(reader.getId()) : reader.getId() != null) return false;
+        if (getName() != null ? !getName().equals(reader.getName()) : reader.getName() != null) return false;
+        if (getSurname() != null ? !getSurname().equals(reader.getSurname()) : reader.getSurname() != null)
+            return false;
+        if (getDateOfAccountCreation() != null ? !getDateOfAccountCreation().equals(reader.getDateOfAccountCreation()) : reader.getDateOfAccountCreation() != null)
+            return false;
+        return getBorrowedBooks() != null ? getBorrowedBooks().equals(reader.getBorrowedBooks()) : reader.getBorrowedBooks() == null;
+    }
+
     @Id
     @GeneratedValue
     @NotNull

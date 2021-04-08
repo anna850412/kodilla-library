@@ -13,9 +13,9 @@ import javax.transaction.Transactional;
 public interface BorrowedBooksRepository extends CrudRepository <BorrowedBooks, Long> {
     @Override
     BorrowedBooks save(BorrowedBooks borrowedBooks);
-//    @Modifying
-//    @Query(nativeQuery = true)
-//    void returnBook(Long readerId, Long bookEntryId);
+    @Modifying
+    @Query(nativeQuery = true)
+    void returnBook(Long readerId, Long bookEntryId);
     @Modifying
     @Query(nativeQuery = true)
     void bookRental(Long readerId, Long titleId);

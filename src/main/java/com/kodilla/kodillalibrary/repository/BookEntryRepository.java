@@ -20,5 +20,5 @@ public interface BookEntryRepository extends CrudRepository<BookEntry, Long> {
 
     List<BookEntry> findByTitleAndStatus(Optional<Title> title, Status status);
 //    List<BookEntry> findByTitleIdAndReaderId(Optional<Title> titleId, Optional<Reader> readerId);
-
+    List<BookEntry> findByReaderAndStatus(Optional<Reader> readerId,  Status status);
 }
