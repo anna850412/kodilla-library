@@ -10,31 +10,16 @@ public class BookEntryMapper {
         BookEntry bookEntry = new BookEntry();
         bookEntry.setTitleEntry(bookEntryDto.getTitleEntry());
         bookEntry.setStatus(bookEntryDto.getStatus());
-        return bookEntry;
 
+        return bookEntry;
     }
 
     public BookEntryDto mapToBookEntryDto(final BookEntry bookEntry) {
         BookEntryDto bookEntryDto = new BookEntryDto();
         bookEntryDto.setTitleEntry(bookEntry.getTitleEntry());
         bookEntryDto.setStatus(bookEntry.getStatus());
-        return bookEntryDto;
 
-//        return new BookEntryDto(
-//                bookEntry.getId(),
-//                bookEntry.getTitleEntry(),
-//                bookEntry.getStatus(),
-//                bookEntry.getBorrowedBooks()
-//        );
+        return bookEntryDto;
     }
-//    public List<BookEntryDto> mapToBookEntryDtoList(final List<BookEntry> bookEntryList){
-//        return bookEntryList.stream()
-//                .map(this::mapToBookEntryDto)
-//                .collect(Collectors.toList());
-//    }
-//    public List<BookEntry> mapToBookEntryList(final List<BookEntryDto> bookEntryDtoList){
-//        return bookEntryDtoList.stream()
-//                .map(this::mapToBookEntry)
-//                .collect(Collectors.toList());
-//    }
+
 }

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
+
 @Transactional
 @Repository
 public interface BookEntryRepository extends CrudRepository<BookEntry, Long> {
@@ -18,6 +19,5 @@ public interface BookEntryRepository extends CrudRepository<BookEntry, Long> {
     Optional<BookEntry> findById(Long id);
 
     List<BookEntry> findByTitleEntryAndStatus(Optional<TitleEntry> title, Status status);
-//    List<BookEntry> findByTitleIdAndReaderId(Optional<Title> titleId, Optional<Reader> readerId);
-//    List<BookEntry> findByReaderAndStatus(Optional<Reader> readerId,  Status status);
+
 }
