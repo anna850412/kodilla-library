@@ -1,5 +1,6 @@
 package com.kodilla.kodillalibrary.mapper;
 
+import com.kodilla.kodillalibrary.domain.BookEntry;
 import com.kodilla.kodillalibrary.domain.BorrowedBooks;
 import com.kodilla.kodillalibrary.domain.BorrowedBooksDto;
 import com.kodilla.kodillalibrary.domain.Reader;
@@ -13,8 +14,8 @@ public class BorrowedBooksMapper {
     public BorrowedBooks mapToBorrowedBooks(final BorrowedBooksDto borrowedBooksDto){
         return new BorrowedBooks(
                 borrowedBooksDto.getId(),
-                borrowedBooksDto.getBookEntries(),
-                borrowedBooksDto.getReaders(),
+                borrowedBooksDto.getBookEntry(),
+                borrowedBooksDto.getReader(),
                 borrowedBooksDto.getDateOfRental(),
                 borrowedBooksDto.getDateOfReturn()
         );

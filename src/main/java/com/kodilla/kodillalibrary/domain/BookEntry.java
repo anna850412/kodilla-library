@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.List;
 @Setter
 @Getter
@@ -23,25 +22,26 @@ public class BookEntry {
     private Long id;
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "TITLE_ID")
-    private Title title;
+    @JoinColumn(name = "TITLE_ENTRY_ID")
+    private TitleEntry titleEntry;
 
     @Column(name = "STATUS")
     private Status status;
 //    @Column(name = "READER_ID")
 //    private Reader readerId;
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "JOIN_BOOK_ENTRIES_BORROWED_BOOKS",
-            joinColumns = {@JoinColumn(name = "BOOK_ENTRY_ID", referencedColumnName = "BOOK_ENTRY_ID")},
-            inverseJoinColumns = {@JoinColumn(name = "BORROWED_BOOKS_ID", referencedColumnName = "BORROWED_BOOKS_ID")}
+//    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+//    @JoinTable(
+//            name = "JOIN_BOOK_ENTRIES_BORROWED_BOOKS",
+//            joinColumns = {@JoinColumn(name = "BOOK_ENTRY_ID", referencedColumnName = "BOOK_ENTRY_ID")},
+//            inverseJoinColumns = {@JoinColumn(name = "BORROWED_BOOKS_ID", referencedColumnName = "BORROWED_BOOKS_ID")}
+//    )
+    @OneToMany(
+            targetEntity = BorrowedBooks.class,
+            mappedBy = "bookEntries",
+            cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY
     )
     private List<BorrowedBooks> borrowedBooks;
 
-
-//    public BookEntry(Title title, Status status) {
-//        this.title = title;
-//        this.status = status;
-//    }
 }

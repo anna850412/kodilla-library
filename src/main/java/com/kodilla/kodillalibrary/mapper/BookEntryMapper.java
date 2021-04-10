@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 public class BookEntryMapper {
     public BookEntry mapToBookEntry(BookEntryDto bookEntryDto) {
         BookEntry bookEntry = new BookEntry();
-        bookEntry.setTitle(bookEntryDto.getTitle());
+        bookEntry.setTitleEntry(bookEntryDto.getTitleEntry());
         bookEntry.setStatus(bookEntryDto.getStatus());
         return bookEntry;
 
@@ -16,13 +16,13 @@ public class BookEntryMapper {
 
     public BookEntryDto mapToBookEntryDto(final BookEntry bookEntry) {
         BookEntryDto bookEntryDto = new BookEntryDto();
-        bookEntryDto.setTitle(bookEntry.getTitle());
+        bookEntryDto.setTitleEntry(bookEntry.getTitleEntry());
         bookEntryDto.setStatus(bookEntry.getStatus());
         return bookEntryDto;
 
 //        return new BookEntryDto(
 //                bookEntry.getId(),
-//                bookEntry.getTitle(),
+//                bookEntry.getTitleEntry(),
 //                bookEntry.getStatus(),
 //                bookEntry.getBorrowedBooks()
 //        );

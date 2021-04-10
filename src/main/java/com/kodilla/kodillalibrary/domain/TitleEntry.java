@@ -14,15 +14,15 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity(name ="TITLES")
-public class Title {
+@Entity(name ="TITLE_ENTRIES")
+public class TitleEntry {
     @Id
     @GeneratedValue
     @NotNull
-    @Column(name = "TITLE_ID", unique = true)
+    @Column(name = "TITLE_ENTRY_ID", unique = true)
         private Long id;
-    @Column(name = "BOOKENTRYID")
-    private Long BookEntryId;
+//    @Column(name = "BOOK_ENTRY_ID")
+//    private Long bookEntryId;
     @NotNull
     @Column(name = "TITLE")
     private String title;
@@ -34,7 +34,7 @@ public class Title {
     private LocalDate publicationYear;
     @OneToMany(
             targetEntity = BookEntry.class,
-            mappedBy = "title",
+            mappedBy = "titleEntry",
             cascade = CascadeType.ALL,
             fetch = FetchType.LAZY
     )

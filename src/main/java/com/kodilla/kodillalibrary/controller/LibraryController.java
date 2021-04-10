@@ -2,12 +2,11 @@ package com.kodilla.kodillalibrary.controller;
 
 import com.kodilla.kodillalibrary.domain.*;
 import com.kodilla.kodillalibrary.exception.BookNotExistException;
-import com.kodilla.kodillalibrary.exception.BorrowedBookNotExistException;
 import com.kodilla.kodillalibrary.exception.ReturnBookNotExistException;
 import com.kodilla.kodillalibrary.mapper.BookEntryMapper;
 import com.kodilla.kodillalibrary.mapper.BorrowedBooksMapper;
 import com.kodilla.kodillalibrary.mapper.ReaderMapper;
-import com.kodilla.kodillalibrary.mapper.TitleMapper;
+import com.kodilla.kodillalibrary.mapper.TitleEntryMapper;
 import com.kodilla.kodillalibrary.service.DbService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
@@ -24,12 +23,12 @@ public class LibraryController {
     private final DbService service;
     private final BookEntryMapper bookEntryMapper;
     private final ReaderMapper readerMapper;
-    private final TitleMapper titleMapper;
+    private final TitleEntryMapper titleEntryMapper;
     private final BorrowedBooksMapper borrowedBooksMapper;
 
-    @GetMapping(value = "findAll")
-    public List<TitleDto> findAll() {
-        return titleMapper.mapToTitlesDto(service.findAll());
+    @GetMapping(value = "findAllTitleEntries")
+    public List<TitleEntryDto> findAll() {
+        return titleEntryMapper.mapToTitleEntriesDtoList(service.findAllTitleEntries());
     }
 
     @PostMapping(value = "createReader", consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -39,15 +38,11 @@ public class LibraryController {
     }
 
     @PostMapping(value = "createTitle", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public void createTitle(@RequestBody TitleDto titleDto) {
-        Title title = titleMapper.mapToTitle(titleDto);
-        service.saveTitle(title);
+    public void createTitle(@RequestBody TitleEntryDto titleEntryDto) {
+        TitleEntry titleEntry = titleEntryMapper.mapToTitleEntry(titleEntryDto);
+        service.saveTitle(titleEntry);
     }
-    @PostMapping(value = "createBorrowedBooks", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public void createBorrowedBooks(@RequestBody BorrowedBooksDto borrowedBooksDto) {
-        BorrowedBooks borrowedBooks = borrowedBooksMapper.mapToBorrowedBooks(borrowedBooksDto);
-        service.saveBorrowedBooks(borrowedBooks);
-    }
+
 
     @PostMapping(value = "createBookEntry", consumes = MediaType.APPLICATION_JSON_VALUE)
     public void createBookEntry(@RequestBody BookEntryDto bookEntryDto) {
@@ -69,20 +64,24 @@ public class LibraryController {
 //        service.setBookEntryStatus(updatedStatus, bookEntry.getId());
 //    }
 
+    //    @GetMapping(value = "howManyBookEntriesAreAvailable")
+//    public Long howManyBookEntriesAreAvailable(@RequestParam Long id) {
+//        Optional<Title> titleById = service.findTitleById(id);
+//        return service.getNumberOfAvailableBooksByTitle(titleById);
+//    }
     @GetMapping(value = "howManyBookEntriesAreAvailable")
-    public Long howManyBookEntriesAreAvailable(@RequestParam Long id) {
-        Optional<Title> titleById = service.findTitleById(id);
-        return service.getNumberOfAvailableBooksByTitle(titleById);
+    public Long howManyBookEntriesAreAvailable(@RequestParam String title, String author) {
+        return service.getNumberOfAvailableBooksByTitleEntry(title, author);
     }
 
-//    @PutMapping(value = "bookRental", consumes = MediaType.APPLICATION_JSON_VALUE)
+    //    @PutMapping(value = "bookRental", consumes = MediaType.APPLICATION_JSON_VALUE)
 //    public void rentABook(@RequestBody TitleDto titleDto) throws BookNotExistException {
 //        Optional<Title> titleById = service.findTitleById(titleDto.getId());
 //        service.findAvailableBooksToBeBorrowedByTitle(titleById);
 //    }
     @PutMapping(value = "bookRental", consumes = MediaType.APPLICATION_JSON_VALUE)
     public void rentABook(@RequestBody BookRentalDto bookRentalDto) throws BookNotExistException {
-       service.bookRental(bookRentalDto);
+        service.bookRental(bookRentalDto);
     }
 
     @PutMapping(value = "returnOfBook", consumes = MediaType.APPLICATION_JSON_VALUE)

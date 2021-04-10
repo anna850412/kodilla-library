@@ -94,7 +94,7 @@ public class Reader {
 
     @OneToMany(
             targetEntity = BorrowedBooks.class,
-            mappedBy = "readers",
+            mappedBy = "reader",
             cascade = CascadeType.ALL,
             fetch = FetchType.LAZY
     )

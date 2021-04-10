@@ -38,11 +38,14 @@ public class BorrowedBooks {
     @NotNull
     @Column(name = "BORROWED_BOOKS_ID", unique = true)
     private Long id;
-    @ManyToMany(cascade = CascadeType.ALL, mappedBy = "borrowedBooks", fetch = FetchType.LAZY)
-    private List<BookEntry> bookEntries;
+//    @Column(name = "BOOK_ENTRIES_ID")
+//    @ManyToMany(cascade = CascadeType.ALL, mappedBy = "borrowedBooks", fetch = FetchType.LAZY)
+    @ManyToOne
+    @JoinColumn(name ="borrowedBooks")
+    private BookEntry bookEntry;
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "READER_ID")
-    private Reader readers;
+    private Reader reader;
     @Column(name = "DATE_OF_RENTAL")
     private LocalDate dateOfRental;
     @Column(name = "DATE_OF_RETURN")

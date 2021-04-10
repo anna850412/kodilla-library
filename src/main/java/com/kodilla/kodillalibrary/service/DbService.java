@@ -2,11 +2,10 @@ package com.kodilla.kodillalibrary.service;
 
 import com.kodilla.kodillalibrary.domain.*;
 import com.kodilla.kodillalibrary.exception.BookNotExistException;
-import com.kodilla.kodillalibrary.exception.BorrowedBookNotExistException;
 import com.kodilla.kodillalibrary.repository.BookEntryRepository;
 import com.kodilla.kodillalibrary.repository.BorrowedBooksRepository;
 import com.kodilla.kodillalibrary.repository.ReaderRepository;
-import com.kodilla.kodillalibrary.repository.TitleRepository;
+import com.kodilla.kodillalibrary.repository.TitleEntryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -19,14 +18,14 @@ public class DbService {
     private final BookEntryRepository bookEntryRepository;
     private final BorrowedBooksRepository borrowedBooksRepository;
     private final ReaderRepository readerRepository;
-    private final TitleRepository titleRepository;
+    private final TitleEntryRepository titleEntryRepository;
 
-    public List<Title> findAll() {
-        return titleRepository.findAll();
+    public List<TitleEntry> findAllTitleEntries() {
+        return titleEntryRepository.findAll();
     }
 
-    public Title saveTitle(final Title title) {
-        return titleRepository.save(title);
+    public TitleEntry saveTitle(final TitleEntry title) {
+        return titleEntryRepository.save(title);
     }
 
     public Reader saveReader(final Reader reader) {
@@ -41,8 +40,16 @@ public class DbService {
         return borrowedBooksRepository.save(borrowedBooks);
     }
 
-    public Optional<Title> findTitleById(Long id) {
-        return titleRepository.findById(id);
+    public Optional<BookEntry> findBookEntryById(Long id){
+        return bookEntryRepository.findById(id);
+    }
+
+    public Optional<TitleEntry> findTitleEntryById(Long id) {
+        return titleEntryRepository.findById(id);
+    }
+
+    public Optional<TitleEntry> findTitleEntryByTileAndAuthor(String title, String author) {
+        return titleEntryRepository.findByTitleAndAuthor(title, author);
     }
 
     public void setBookEntryStatus(Status status, Long id) throws BookNotExistException {
@@ -53,13 +60,14 @@ public class DbService {
     }
 
     //    sprawdzenie ilości egzemplarzy danego tytułu dostępnych do wypożyczenia,
-    public Long getNumberOfAvailableBooksByTitle(Optional<Title> title) {
-        return bookEntryRepository.findByTitleAndStatus(title, Status.AVAILABLE).stream().count();
+    public Long getNumberOfAvailableBooksByTitleEntry(String title, String author) {
+        Optional<TitleEntry> titleEntry = titleEntryRepository.findByTitleAndAuthor(title, author);
+        return bookEntryRepository.findByTitleEntryAndStatus(titleEntry, Status.AVAILABLE).stream().count();
     }
 
     //    wypożyczenie książki,
-    public void findAvailableBooksToBeBorrowedByTitle(Optional<Title> title) throws BookNotExistException {
-        bookEntryRepository.findByTitleAndStatus(title, Status.AVAILABLE).stream()
+    public void findAvailableBooksToBeBorrowedByTitle(Optional<TitleEntry> title) throws BookNotExistException {
+        bookEntryRepository.findByTitleEntryAndStatus(title, Status.AVAILABLE).stream()
                 .findFirst()
                 .orElseThrow(() -> new BookNotExistException("Book does not exist"))
                 .setStatus(Status.BORROWED);
@@ -76,8 +84,8 @@ public class DbService {
 //        }
 //    }
     public void bookRental(BookRentalDto bookRentalDto) {
-        Title title = findTitleById(bookRentalDto.getTitleId()).get();
-        Optional<BookEntry> availableBookEntry = bookEntryRepository.findByTitleAndStatus(
+        TitleEntry title = findTitleEntryById(bookRentalDto.getTitleId()).get();
+        Optional<BookEntry> availableBookEntry = bookEntryRepository.findByTitleEntryAndStatus(
                 Optional.of(title), Status.AVAILABLE).stream()
                 .findFirst();
         if (availableBookEntry.isPresent()
@@ -91,9 +99,13 @@ public class DbService {
     }
 
     public void returnBook(ReturnBookDto returnBookDto) {
+        Optional<TitleEntry> title = findTitleEntryById(returnBookDto.getBookEntryId());
         Optional<Reader> reader = Optional.of(readerRepository.findById(returnBookDto.getReaderId()).get());
-        Optional<BookEntry> rentedBookEntry = bookEntryRepository.findByReaderAndStatus(
-                reader, Status.BORROWED).stream()
+        Optional<BookEntry> rentedBookEntry = bookEntryRepository.findByTitleEntryAndStatus(
+                title, Status.BORROWED
+        ).stream()
+//                bookEntryRepository.findByReaderAndStatus(
+//                reader, Status.BORROWED).stream()
                 .findFirst();
         if (rentedBookEntry.isPresent()
                 && readerRepository.existsById(returnBookDto.getReaderId())

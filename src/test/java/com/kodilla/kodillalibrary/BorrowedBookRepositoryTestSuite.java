@@ -23,9 +23,9 @@ public class BorrowedBookRepositoryTestSuite {
         Long bookEntryId2 = 2L;
          List<BookEntry> bookEntries = new ArrayList<>();
         List<BorrowedBooks> borrowedBooks = new ArrayList<>();
-        Title title1 = new Title(  1L,bookEntryId1, "Title1", "Author1",
+        TitleEntry title1 = new TitleEntry(  1L,bookEntryId1, "Title1", "Author1",
                 LocalDate.of(2021, 01, 04), bookEntries);
-        Title title2 = new Title(2L, bookEntryId2,"Title2", "Author2",
+        TitleEntry title2 = new TitleEntry(2L, bookEntryId2,"Title2", "Author2",
                 LocalDate.of(2017, 12, 14), bookEntries);
         BookEntry bookEntry1 = new BookEntry(1L,title1, Status.RESERVED, borrowedBooks);
         BookEntry bookEntry2 = new BookEntry(2L, title2, Status.AVAILABLE, borrowedBooks);

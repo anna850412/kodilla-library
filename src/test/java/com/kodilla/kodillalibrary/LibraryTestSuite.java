@@ -5,11 +5,11 @@ import com.kodilla.kodillalibrary.domain.*;
 import com.kodilla.kodillalibrary.mapper.BookEntryMapper;
 import com.kodilla.kodillalibrary.mapper.BorrowedBooksMapper;
 import com.kodilla.kodillalibrary.mapper.ReaderMapper;
-import com.kodilla.kodillalibrary.mapper.TitleMapper;
+import com.kodilla.kodillalibrary.mapper.TitleEntryMapper;
 import com.kodilla.kodillalibrary.repository.BookEntryRepository;
 import com.kodilla.kodillalibrary.repository.BorrowedBooksRepository;
 import com.kodilla.kodillalibrary.repository.ReaderRepository;
-import com.kodilla.kodillalibrary.repository.TitleRepository;
+import com.kodilla.kodillalibrary.repository.TitleEntryRepository;
 import com.kodilla.kodillalibrary.service.DbService;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -38,7 +38,7 @@ public class LibraryTestSuite {
     @Autowired
     private BorrowedBooksRepository borrowedBooksRepository;
     @Autowired
-    private TitleRepository titleRepository;
+    private TitleEntryRepository titleEntryRepository;
     @Autowired
     private BookEntryRepository bookEntryRepository;
     @InjectMocks
@@ -52,7 +52,7 @@ public class LibraryTestSuite {
     @Autowired
     private ReaderMapper readerMapper;
     @Autowired
-    private TitleMapper titleMapper;
+    private TitleEntryMapper titleEntryMapper;
     @Mock
     private BookEntry bookEntry;
     @Mock
@@ -60,7 +60,7 @@ public class LibraryTestSuite {
     @Mock
     private BorrowedBooksDto borrowedBooksDto;
     @Mock
-    private TitleDto titleDto;
+    private TitleEntryDto titleEntryDto;
 
     /*   @Nested
        @DisplayName("SQL Tests")
@@ -134,10 +134,10 @@ public class LibraryTestSuite {
             //Given
             List<BookEntry> bookEntries = new ArrayList<>();
             List<BorrowedBooks> borrowedBooks = new ArrayList<>();
-            Title title = new Title(1L, 1L, "Title", "Author",
+            TitleEntry titleEntry = new TitleEntry(1L, 1L, "Title", "Author",
                     LocalDate.of(2021, 4, 22), bookEntries);
-            BookEntry bookEntry = new BookEntry(1L, title, Status.AVAILABLE, borrowedBooks);
-            LibraryController controller = new LibraryController(service, bookEntryMapper, readerMapper, titleMapper, borrowedBooksMapper);
+            BookEntry bookEntry = new BookEntry(1L, titleEntry, Status.AVAILABLE, borrowedBooks);
+            LibraryController controller = new LibraryController(service, bookEntryMapper, readerMapper, titleEntryMapper, borrowedBooksMapper);
             //When
             controller.createBookEntry(bookEntryMapper.mapToBookEntryDto(bookEntry));
             //Then
@@ -161,7 +161,7 @@ public class LibraryTestSuite {
             Reader reader = new Reader(1L, "Ala", "Wilk",
                     LocalDate.of(2018, 4, 23), borrowedBooks);
             LibraryController controller = new LibraryController(service, bookEntryMapper,
-                    readerMapper, titleMapper, borrowedBooksMapper);
+                    readerMapper, titleEntryMapper, borrowedBooksMapper);
             //When
             controller.createReader(readerMapper.mapToReaderDto(reader));
             //Then
@@ -173,13 +173,13 @@ public class LibraryTestSuite {
 
             //Given
             List<BookEntry> bookEntries = new ArrayList<>();
-            Title title = new Title(1L, 2L, "test Title", "test Author",
+            TitleEntry titleEntry = new TitleEntry(1L, 2L, "test Title", "test Author",
                     LocalDate.of(2010, 9, 11), bookEntries);
-            LibraryController controller = new LibraryController(service, bookEntryMapper, readerMapper, titleMapper, borrowedBooksMapper);
+            LibraryController controller = new LibraryController(service, bookEntryMapper, readerMapper, titleEntryMapper, borrowedBooksMapper);
             //When
-            controller.createTitle(titleMapper.mapToTitleDto(title));
+            controller.createTitle(titleEntryMapper.mapToTitleEntryDto(titleEntry));
             //Then
-            verify(service, times(1)).saveTitle(title);
+            verify(service, times(1)).saveTitle(titleEntry);
         }
 
         //        @Disabled
@@ -188,9 +188,9 @@ public class LibraryTestSuite {
             //Given
             List<BookEntry> bookEntries = new ArrayList<>();
             List<BorrowedBooks> borrowedBooks = new ArrayList<>();
-            Title title = new Title(1L, 1L, "Title", "Author",
+            TitleEntry titleEntry = new TitleEntry(1L, 1L, "Title", "Author",
                     LocalDate.of(2010, 3, 21), bookEntries);
-            BookEntry bookEntry = new BookEntry(1L, title, Status.AVAILABLE, borrowedBooks);
+            BookEntry bookEntry = new BookEntry(1L, titleEntry, Status.AVAILABLE, borrowedBooks);
             //When
             BookEntry savedStatus = bookEntryRepository.save(bookEntry);
             //Then
@@ -200,13 +200,13 @@ public class LibraryTestSuite {
         @Test
         void testHowManyBookEntriesAreAvailable() {
             //Given
-            TitleDto titleDto = new TitleDto(1L,"Title1","Author",
+            TitleEntryDto titleEntryDto = new TitleEntryDto(1L,"Title1","Author",
                     LocalDate.of(2010, 3, 2), 1L);
-            LibraryController controller = new LibraryController(service, bookEntryMapper, readerMapper, titleMapper, borrowedBooksMapper);
+            LibraryController controller = new LibraryController(service, bookEntryMapper, readerMapper, titleEntryMapper, borrowedBooksMapper);
             //When
-            controller.howManyBookEntriesAreAvailable(titleDto.getId());
+            controller.howManyBookEntriesAreAvailable(titleEntryDto.getTitle());
             //Then
-            verify(service, times(1)).findTitleById(titleDto.getId());
+            verify(service, times(1)).findTitleEntryById(titleEntryDto.getId());
         }
 
         @Test
@@ -236,7 +236,7 @@ public class LibraryTestSuite {
         @Test
         void testReaderRepositorySaveWithReader() {
             //Given
-            List<BookEntry> bookEntries = new ArrayList<>();
+            BookEntry bookEntries = new BookEntry();
             List<BorrowedBooks> borrowedBooks = new ArrayList<>();
             Reader reader1 = new Reader(1L, "Anna", "Kowalska",
                     LocalDate.of(2019, 03, 12), borrowedBooks);
@@ -276,29 +276,29 @@ public class LibraryTestSuite {
             //Given
             List<BorrowedBooks> borrowedBooks = new ArrayList<>();
             List<BookEntry> bookEntries = new ArrayList<>();
-            Title title1 = new Title(1L, 1L, "Title1", "Author1",
+            TitleEntry title1 = new TitleEntry(1L, 1L, "Title1", "Author1",
                     LocalDate.of(2016, 06, 21), bookEntries);
-            Title title2 = new Title(2L, 2L, "Title2", "Author2",
+            TitleEntry title2 = new TitleEntry(2L, 2L, "Title2", "Author2",
                     LocalDate.of(2011, 12, 11), bookEntries);
             BookEntry bookEntry1 = new BookEntry(1L, title1, Status.BORROWED, borrowedBooks);
             BookEntry bookEntry2 = new BookEntry(2L, title2, Status.RESERVED, borrowedBooks);
-            bookEntry1.setTitle(title1);
-            bookEntry2.setTitle(title2);
+            bookEntry1.setTitleEntry(title1);
+            bookEntry2.setTitleEntry(title2);
             title1.getBookEntries().add(bookEntry1);
             title2.getBookEntries().add(bookEntry2);
 
             //When
-            titleRepository.save(title1);
+            titleEntryRepository.save(title1);
             Long id1 = title1.getId();
-            titleRepository.save(title2);
+            titleEntryRepository.save(title2);
             Long id2 = title2.getId();
 
             //Then
             Assertions.assertNotEquals(0, id1);
             Assertions.assertNotEquals(0, id2);
             //Clean up
-            titleRepository.deleteById(id1);
-            titleRepository.deleteById(id2);
+            titleEntryRepository.deleteById(id1);
+            titleEntryRepository.deleteById(id2);
         }
 
         @Test
@@ -306,10 +306,10 @@ public class LibraryTestSuite {
             //Given
             List<BookEntry> bookEntries = new ArrayList<>();
             List<BorrowedBooks> borrowedBooks = new ArrayList<>();
-            Title title1 = new Title(1L, 1L, "Title1", "Author1",
+            TitleEntry title1 = new TitleEntry(1L, 1L, "Title1", "Author1",
                     LocalDate.of(2016, 06, 21), bookEntries);
             BookEntry bookEntry1 = new BookEntry(1L, title1, Status.BORROWED, borrowedBooks);
-            bookEntry1.setTitle(title1);
+            bookEntry1.setTitleEntry(title1);
             title1.getBookEntries().add(bookEntry1);
 
             //When
@@ -328,19 +328,19 @@ public class LibraryTestSuite {
         void testTitleRepositoryFindById() {
             //Given
             List<BookEntry> bookEntries = new ArrayList<>();
-            Title title1 = new Title(1L, 1L, "Title1", "Author1",
+            TitleEntry title1 = new TitleEntry(1L, 1L, "Title1", "Author1",
                     LocalDate.of(2016, 06, 21), bookEntries);
 
             //When
-            titleRepository.save(title1);
+            titleEntryRepository.save(title1);
 
             //Then
             Long id1 = title1.getId();
-            Optional<Title> savedTitle1 = titleRepository.findById(id1);
+            Optional<TitleEntry> savedTitle1 = titleEntryRepository.findById(id1);
             Assertions.assertTrue(savedTitle1.isPresent());
 
             //Clean up
-            titleRepository.deleteById(id1);
+            titleEntryRepository.deleteById(id1);
         }
 
         @Test
@@ -348,9 +348,9 @@ public class LibraryTestSuite {
             //Given
             List<BookEntry> bookEntries = new ArrayList<>();
             List<BorrowedBooks> borrowedBooks = new ArrayList<>();
-            Title title = new Title(1L, 1L, "Title1", "Author1",
+            TitleEntry titleEntry = new TitleEntry(1L, 1L, "Title1", "Author1",
                     LocalDate.of(2016, 06, 21), bookEntries);
-            BookEntry bookEntry = new BookEntry(1L, title, Status.BORROWED, borrowedBooks);
+            BookEntry bookEntry = new BookEntry(1L, titleEntry, Status.BORROWED, borrowedBooks);
             //When
             bookEntryRepository.save(bookEntry);
 
@@ -366,17 +366,17 @@ public class LibraryTestSuite {
         void testTitleRepositoryFindAll() {
             //Given
             List<BookEntry> bookEntries = new ArrayList<>();
-            Title title1 = new Title(1L, 1L, "Title1", "Author1",
+            TitleEntry title1 = new TitleEntry(1L, 1L, "Title1", "Author1",
                     LocalDate.of(2016, 06, 21), bookEntries);
             //When
-            titleRepository.save(title1);
+            titleEntryRepository.save(title1);
 
             //Then
             Long id = title1.getId();
-            Optional<Title> savedTitle = titleRepository.findById(id);
+            Optional<TitleEntry> savedTitle = titleEntryRepository.findById(id);
             Assertions.assertTrue(savedTitle.isPresent());
             //Clean up
-            titleRepository.deleteById(id);
+            titleEntryRepository.deleteById(id);
         }
 
         @Test
@@ -384,29 +384,28 @@ public class LibraryTestSuite {
             //Given
             List<BookEntry> bookEntries = new ArrayList<>();
             List<BorrowedBooks> borrowedBooks = new ArrayList<>();
-            Title title1 = new Title(1L, 1L, "Title1", "Author1",
+            TitleEntry title1 = new TitleEntry(1L, 1L, "Title1", "Author1",
                     LocalDate.of(2021, 01, 04), bookEntries);
-            Title title2 = new Title(2L, 2L, "Title2", "Author2",
+            TitleEntry title2 = new TitleEntry(2L, 2L, "Title2", "Author2",
                     LocalDate.of(2017, 12, 14), bookEntries);
             BookEntry bookEntry1 = new BookEntry(1L, title1, Status.RESERVED, borrowedBooks);
             BookEntry bookEntry2 = new BookEntry(2L, title2, Status.AVAILABLE, borrowedBooks);
-            bookEntries.add(bookEntry1);
-            bookEntries.add(bookEntry2);
-
+//            bookEntries.add(bookEntry1);
+//            bookEntries.add(bookEntry2);
 
             Reader reader1 = new Reader(1L, "Anna", "Kowalska",
                     LocalDate.of(2019, 03, 12), borrowedBooks);
             Reader reader2 = new Reader(2L, "Piotr", "Nowak",
                     LocalDate.of(2018, 06, 23), borrowedBooks);
-            BorrowedBooks borrowedBook1 = new BorrowedBooks(1L, bookEntries, reader1,
+            BorrowedBooks borrowedBook1 = new BorrowedBooks(1L, bookEntry1, reader1,
                     LocalDate.of(2021, 01, 15), LocalDate.of(2021, 03, 05));
-            BorrowedBooks borrowedBook2 = new BorrowedBooks(2L, bookEntries, reader2, LocalDate.of(2020, 07, 27),
+            BorrowedBooks borrowedBook2 = new BorrowedBooks(2L, bookEntry2, reader2, LocalDate.of(2020, 07, 27),
                     LocalDate.of(2020, 11, 11));
 
-            borrowedBook1.setBookEntries((List<BookEntry>) bookEntry1);
-            borrowedBook2.setBookEntries((List<BookEntry>) bookEntry2);
-            borrowedBook1.getBookEntries().add(bookEntry1);
-            borrowedBook2.getBookEntries().add(bookEntry2);
+            borrowedBook1.setBookEntries(bookEntry1);
+            borrowedBook2.setBookEntries(bookEntry2);
+//            borrowedBook1.getBookEntries().add(bookEntry1);
+//            borrowedBook2.getBookEntries().add(bookEntry2);
 
             //When
             borrowedBooksRepository.save(borrowedBook1);
@@ -428,14 +427,14 @@ public class LibraryTestSuite {
             //Given
             List<BookEntry> bookEntries = new ArrayList<>();
             List<BorrowedBooks> borrowedBooks = new ArrayList<>();
-            Title title1 = new Title(1L, 2L, "Title1", "Author1",
+            TitleEntry titleEntry1 = new TitleEntry(1L, 2L, "Title1", "Author1",
                     LocalDate.of(2016, 06, 21), bookEntries);
-            BookEntry bookEntry = new BookEntry(2L, title1, Status.BORROWED, borrowedBooks);
+            BookEntry bookEntry = new BookEntry(2L, titleEntry1, Status.BORROWED, borrowedBooks);
             bookEntryRepository.save(bookEntry);
             Status status = bookEntry.getStatus();
-            Optional<Title> title = Optional.ofNullable(bookEntry.getTitle());
+            Optional<TitleEntry> title = Optional.ofNullable(bookEntry.getTitleEntry());
             //When
-            List<BookEntry> savedTitleAndStatus = bookEntryRepository.findByTitleAndStatus(title, status);
+            List<BookEntry> savedTitleAndStatus = bookEntryRepository.findByTitleEntryAndStatus(title, status);
 
             //Then
             Assertions.assertEquals(1, savedTitleAndStatus.size());
