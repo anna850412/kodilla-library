@@ -14,12 +14,12 @@ public interface Borrowings extends CrudRepository<Borrowing, Long> {
     @Override
     Borrowing save(Borrowing borrowing);
 
-    @Modifying
-    @Query(nativeQuery = true)
-    void returnBook(Long readerId, Long bookEntryId);
-
-    @Modifying
-    @Query(nativeQuery = true)
-    void bookRental(Long readerId, Long titleId);
+//    @Modifying
+//    @Query(nativeQuery = true)
+//    void returnBook(Long readerId, Long bookEntryId);
+//
+//    @Modifying
+//    @Query(nativeQuery = true)
+//    void bookRental(Long readerId, Long titleId);
 
 }

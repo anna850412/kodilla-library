@@ -37,14 +37,14 @@ public class Borrowing {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "BORROWED_BOOK")
+    @JoinColumn(name = "BOOK_ENTRY_ID")
     private BookEntry bookEntry;
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "READER_ID")
     private Reader reader;
 
-    @Column(name = "RENTAR_DATE")
+    @Column(name = "RENTAL_DATE")
     private LocalDate rentalDate;
 
     @Column(name = "RETURN_DATE")

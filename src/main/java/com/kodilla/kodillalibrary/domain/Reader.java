@@ -51,7 +51,6 @@ public class Reader {
         this.borrowings = borrowings;
     }
 
-
     @Override
     public int hashCode() {
         int result = getId() != null ? getId().hashCode() : 0;

@@ -30,7 +30,7 @@ public class BookEntry {
 
     @OneToMany(
             targetEntity = Borrowing.class,
-            mappedBy = "bookEntries",
+            mappedBy = "bookEntry",
             cascade = CascadeType.ALL,
             fetch = FetchType.LAZY
     )
