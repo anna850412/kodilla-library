@@ -12,7 +12,7 @@ import javax.transaction.Transactional;
 @Repository
 public interface Borrowings extends CrudRepository<Borrowing, Long> {
     @Override
-    Borrowing save(Borrowing borrowing);
+    Borrowing save(Borrowing borrowing); // todo jezeli juz to chyba BorrowingRepository 
 
 //    @Modifying
 //    @Query(nativeQuery = true)
@@ -21,5 +21,5 @@ public interface Borrowings extends CrudRepository<Borrowing, Long> {
 //    @Modifying
 //    @Query(nativeQuery = true)
 //    void bookRental(Long readerId, Long titleId);
-
+//todo ta cała klasa chyba nie potrzebna?
 }
