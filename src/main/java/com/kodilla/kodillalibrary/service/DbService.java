@@ -67,6 +67,9 @@ public class DbService {
         TitleEntry titleEntry = titleEntryRepository.findByTitleAndAuthor(title, author);
         return bookEntryRepository.findByTitleEntryAndStatus(titleEntry, Status.AVAILABLE).stream().count();
     }
+    public Long getNumberOfAvailableBooksById(Long id){
+                return bookEntryRepository.findById(id).stream().count();
+    }
 
     //    wypożyczenie książki,
     public void findAvailableBooksToBeBorrowedByTitle(TitleEntry titleEntry) throws BookNotExistException {
@@ -103,12 +106,9 @@ public class DbService {
                 titleEntry, Status.BORROWED).
                 stream().
                 findFirst().orElseThrow(() -> new BookNotExistException("No available book entry for this title"));
-//        if (rentedBookEntry.isPresent()
-//                && readerRepository.existsById(returnBookDto.getReaderId())
-//                && bookEntryRepository.existsById(returnBookDto.getBookEntryId())) {
-//            BookEntry bookEntry = rentedBookEntry.get();
+//
         rentedBookEntry.setStatus(Status.AVAILABLE);
-        Borrowing borrowing = new Borrowing(rentedBookEntry, reader, LocalDate.now(), null);
+        Borrowing borrowing = new Borrowing(rentedBookEntry, reader, rentedBookEntry.getBorrowings().get(), LocalDate.now());
         reader.getBorrowings().add(borrowing);
         rentedBookEntry.getBorrowings().add(borrowing);
         saveReader(reader);

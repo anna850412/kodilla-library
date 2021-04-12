@@ -12,6 +12,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/v1/library")
@@ -54,18 +55,23 @@ public class LibraryController {
         return bookEntryMapper.mapToBookEntryDto(savedStatus);
     }
 
-    @GetMapping(value = "howManyBookEntriesAreAvailable")
+//        @GetMapping(value = "howManyBookEntriesAreAvailableById")
+//    public Long howManyBookEntriesAreAvailable(@RequestParam Long id) {
+//            Optional<TitleEntry> titleById = service.findTitleEntryById(id);
+//            return service.getNumberOfAvailableBooksById(titleById);
+//        }
+
+    @GetMapping(value = "howManyBookEntriesAreAvailableByTitleAndAuthor")
     public Long howManyBookEntriesAreAvailable(@RequestParam String title, String author) {
         return service.getNumberOfAvailableBooksByTitleEntry(title, author);
     }
 
-
-    @PutMapping(value = "bookRental", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "rentBook", consumes = MediaType.APPLICATION_JSON_VALUE)
     public void rentABook(@RequestBody BookRentalDto bookRentalDto) throws BookNotExistException {
         service.rentBook(bookRentalDto);
     }
 
-    @PutMapping(value = "returnOfBook", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "returnBook", consumes = MediaType.APPLICATION_JSON_VALUE)
     public void returnOfBook(@RequestBody ReturnBookDto returnBookDto) throws ReturnBookNotExistException {
         service.returnBook(returnBookDto);
     }
