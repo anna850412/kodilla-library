@@ -108,7 +108,13 @@ public class DbService {
                 findFirst().orElseThrow(() -> new BookNotExistException("No available book entry for this title"));
 //
         rentedBookEntry.setStatus(Status.AVAILABLE);
-        Borrowing borrowing = new Borrowing(rentedBookEntry, reader, rentedBookEntry.getBorrowings().get(), LocalDate.now());
+        Borrowing borrowing = new Borrowing(rentedBookEntry, reader,
+//                reader.getBorrowings().get(0).getRentalDate() ,
+                rentedBookEntry.getBorrowings().stream()
+                        .filter(borrowing1->borrowing1.getReader().getId().equals(returnBookDto.getReaderId()))
+                        .filter(borrowing1 -> borrowing1.getReturnDate().isBefore(LocalDate.now()))
+                        .findFirst().get().getRentalDate(),
+                LocalDate.now());
         reader.getBorrowings().add(borrowing);
         rentedBookEntry.getBorrowings().add(borrowing);
         saveReader(reader);
