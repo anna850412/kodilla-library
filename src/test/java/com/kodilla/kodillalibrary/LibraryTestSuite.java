@@ -74,7 +74,7 @@ public class LibraryTestSuite {
             BookEntry bookEntry = new BookEntry(titleEntry, Status.AVAILABLE, borrowedBooks);
             LibraryController controller = new LibraryController(service, bookEntryMapper, readerMapper, titleEntryMapper);
             //When
-            controller.createBookEntry(bookEntryMapper.mapToBookEntryDto(bookEntry));
+          //  controller.createBookEntry(bookEntryMapper.mapToBookEntryDto(bookEntry));
             //Then
             verify(service, times(1)).saveBookEntry(bookEntry);
         }
@@ -366,7 +366,7 @@ public class LibraryTestSuite {
             Status status = bookEntry.getStatus();
             Optional<TitleEntry> title = Optional.ofNullable(bookEntry.getTitleEntry());
             //When
-            List<BookEntry> savedTitleAndStatus = bookEntryRepository.findByTitleEntryAndStatus(title, status);
+            List<BookEntry> savedTitleAndStatus = bookEntryRepository.findByTitleEntryAndStatus(title.get(), status);
 
             //Then
             Assertions.assertEquals(1, savedTitleAndStatus.size());

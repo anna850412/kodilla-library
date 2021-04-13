@@ -11,6 +11,6 @@ import lombok.Setter;
 @AllArgsConstructor
 public class BookEntryDto {
     private Long id;
-    private TitleEntry titleEntry;
+    private Long titleEntryId;
     private Status status;
 }

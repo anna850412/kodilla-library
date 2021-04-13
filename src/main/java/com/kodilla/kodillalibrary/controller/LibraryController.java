@@ -3,6 +3,7 @@ package com.kodilla.kodillalibrary.controller;
 import com.kodilla.kodillalibrary.domain.*;
 import com.kodilla.kodillalibrary.exception.BookNotExistException;
 import com.kodilla.kodillalibrary.exception.ReturnBookNotExistException;
+import com.kodilla.kodillalibrary.exception.TitleEntryNotExistException;
 import com.kodilla.kodillalibrary.mapper.BookEntryMapper;
 import com.kodilla.kodillalibrary.mapper.ReaderMapper;
 import com.kodilla.kodillalibrary.mapper.TitleEntryMapper;
@@ -42,17 +43,15 @@ public class LibraryController {
     }
 
     @PostMapping(value = "createBookEntry", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public void createBookEntry(@RequestBody BookEntryDto bookEntryDto) {
+    public void createBookEntry(@RequestBody BookEntryDto bookEntryDto) throws TitleEntryNotExistException {
         BookEntry bookEntry = bookEntryMapper.mapToBookEntry(bookEntryDto);
         service.saveBookEntry(bookEntry);
     }
 
     @PutMapping(value = "updateStatus", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public BookEntryDto updateStatus(@RequestBody BookEntryDto bookEntryDto) {
+    public void updateStatus(@RequestBody BookEntryDto bookEntryDto) throws TitleEntryNotExistException {
         BookEntry bookEntry = bookEntryMapper.mapToBookEntry(bookEntryDto);
         BookEntry savedStatus = service.saveBookEntry(bookEntry);
-
-        return bookEntryMapper.mapToBookEntryDto(savedStatus);
     }
 
 //        @GetMapping(value = "howManyBookEntriesAreAvailableById")

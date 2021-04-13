@@ -68,10 +68,6 @@ public class DbService {
         return bookEntryRepository.findByTitleEntryAndStatus(titleEntry, Status.AVAILABLE).stream().count();
     }
 
-    public Long getNumberOfAvailableBooksById(Long id) {
-        return bookEntryRepository.findById(id).stream().count();
-    }
-
     //    wypożyczenie książki,
     public void findAvailableBooksToBeBorrowedByTitle(TitleEntry titleEntry) throws BookNotExistException {
         bookEntryRepository.findByTitleEntryAndStatus(titleEntry, Status.AVAILABLE).stream()
