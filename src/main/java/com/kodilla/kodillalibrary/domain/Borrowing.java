@@ -1,14 +1,12 @@
 package com.kodilla.kodillalibrary.domain;
 
 import com.sun.istack.NotNull;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.List;
 
 //zwrot książki mając readerId i bookEntryId
 
@@ -17,39 +15,45 @@ import java.util.List;
         query = "UPDATE BOOK_ENTRIES " +
                 "SET STATUS = Status.AVAILABLE " +
                 "WHERE READERS.READER_ID = :readerId AND BOOK_ENTRY_ID = :bookEntryId",
-        resultClass = BorrowedBooks.class
+        resultClass = Borrowing.class
 )
 @NamedNativeQuery(
         name = "BorrowedBooks.bookRental",
         query = "UPDATE BOOK_ENTRIES " +
                 "SET STATUS = Status.BORROWED " +
                 "WHERE READERS.READER_ID = :readerId AND BOOK_ENTRIES.TITLE_ID = :titleId",
-        resultClass = BorrowedBooks.class
+        resultClass = Borrowing.class
 )
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
 @Entity
-@Table(name = "BORROWED_BOOKS")
-public class BorrowedBooks {
+@Table(name = "BORROWINGS")
+public class Borrowing {
     @Id
     @GeneratedValue
     @NotNull
-    @Column(name = "BORROWED_BOOKS_ID", unique = true)
+    @Column(name = "BORROWING_ID", unique = true)
     private Long id;
-//    @Column(name = "BOOK_ENTRIES_ID")
-//    @ManyToMany(cascade = CascadeType.ALL, mappedBy = "borrowedBooks", fetch = FetchType.LAZY)
+
     @ManyToOne
-    @JoinColumn(name ="borrowedBooks")
+    @JoinColumn(name = "BOOK_ENTRY_ID")
     private BookEntry bookEntry;
+
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "READER_ID")
     private Reader reader;
-    @Column(name = "DATE_OF_RENTAL")
-    private LocalDate dateOfRental;
-    @Column(name = "DATE_OF_RETURN")
-    private LocalDate dateOfReturn;
 
+    @Column(name = "RENTAL_DATE")
+    private LocalDate rentalDate;
 
+    @Column(name = "RETURN_DATE")
+    private LocalDate returnDate;
+
+    public Borrowing(BookEntry bookEntry, Reader reader, LocalDate rentalDate, LocalDate returnDate) {
+        this.bookEntry = bookEntry;
+        this.reader = reader;
+        this.rentalDate = rentalDate;
+        this.returnDate = returnDate;
+    }
 }

@@ -9,7 +9,7 @@ import java.util.Optional;
 
 @Transactional
 @Repository
-public interface ReaderRepository extends CrudRepository <Reader, Long> {
+public interface ReaderRepository extends CrudRepository<Reader, Long> {
     @Override
     Reader save(Reader reader);
 

@@ -10,7 +10,8 @@ public class ReaderMapper {
         Reader reader = new Reader();
         reader.setName(readerDto.getName());
         reader.setSurname(readerDto.getSurname());
-        reader.setDateOfAccountCreation(readerDto.getDateOfAccountCreation());
+        reader.setCreationDate(readerDto.getCreationDate());
+
         return reader;
     }
 
@@ -18,7 +19,9 @@ public class ReaderMapper {
         ReaderDto readerDto = new ReaderDto();
         readerDto.setName(reader.getName());
         readerDto.setSurname(reader.getSurname());
-        readerDto.setDateOfAccountCreation(reader.getDateOfAccountCreation());
+        readerDto.setCreationDate(reader.getCreationDate());
+
         return readerDto;
     }
+
 }

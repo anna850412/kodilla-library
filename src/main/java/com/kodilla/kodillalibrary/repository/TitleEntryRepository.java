@@ -14,6 +14,6 @@ public interface TitleEntryRepository extends CrudRepository<TitleEntry, Long> {
     TitleEntry save(TitleEntry titleEntry);
     @Override
     List<TitleEntry> findAll();
-   Optional<TitleEntry> findByTitleAndAuthor(String title, String author);
+   TitleEntry findByTitleAndAuthor(String title, String author);
     Optional<TitleEntry> findById(Long id);
 }

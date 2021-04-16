@@ -9,24 +9,25 @@ import java.util.stream.Collectors;
 
 @Service
 public class TitleEntryMapper {
-    public TitleEntry mapToTitleEntry(final TitleEntryDto titleEntryDto){
+    public TitleEntry mapToTitleEntry(final TitleEntryDto titleEntryDto) {
         TitleEntry titleEntry = new TitleEntry();
         titleEntry.setTitle(titleEntryDto.getTitle());
         titleEntry.setAuthor(titleEntryDto.getAuthor());
         titleEntry.setPublicationYear(titleEntryDto.getPublicationYear());
-//        titleEntry.setBookEntryId(titleEntryDto.getBookEntryId());
 
         return titleEntry;
     }
-    public TitleEntryDto mapToTitleEntryDto(final TitleEntry titleEntry){
+
+    public TitleEntryDto mapToTitleEntryDto(final TitleEntry titleEntry) {
         TitleEntryDto titleEntryDto = new TitleEntryDto();
         titleEntryDto.setTitle(titleEntry.getTitle());
         titleEntryDto.setAuthor(titleEntry.getAuthor());
         titleEntryDto.setPublicationYear(titleEntry.getPublicationYear());
-//        titleEntryDto.setBookEntryId(titleEntry.getBookEntryId());
+
         return titleEntryDto;
     }
-    public List<TitleEntryDto> mapToTitleEntriesDtoList(final List<TitleEntry> titleEntries){
+
+    public List<TitleEntryDto> mapToTitleEntriesDtoList(final List<TitleEntry> titleEntries) {
         return titleEntries.stream()
                 .map(this::mapToTitleEntryDto)
                 .collect(Collectors.toList());

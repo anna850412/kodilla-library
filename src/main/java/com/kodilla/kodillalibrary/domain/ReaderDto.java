@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+
 @NoArgsConstructor
 @Setter
 @Getter
@@ -14,6 +15,5 @@ public class ReaderDto {
     private Long id;
     private String name;
     private String surname;
-    private LocalDate dateOfAccountCreation;
-//    private List<BorrowedBooks> borrowedBooks = new ArrayList<>();
+    private LocalDate creationDate;
 }

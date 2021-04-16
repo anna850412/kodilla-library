@@ -1,7 +1,6 @@
 package com.kodilla.kodillalibrary.domain;
 
 import com.sun.istack.NotNull;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -11,26 +10,54 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+@Getter
+@Setter
 @NoArgsConstructor
-@AllArgsConstructor
 @Entity
 @Table(name = "READERS")
 public class Reader {
 
-
+    @Id
+    @GeneratedValue
+    @NotNull
+    @Column(name = "READER_ID", unique = true)
     private Long id;
+
+    @NotNull
+    @Column(name = "NAME")
     private String name;
+
+    @NotNull
+    @Column(name = "SURNAME")
     private String surname;
-    private LocalDate dateOfAccountCreation;
-    private List<BorrowedBooks> borrowedBooks = new ArrayList<>();
+
+    @NotNull
+    @Column(name = "ACCOUNT_CREATION_DATE")
+    private LocalDate creationDate;
+
+
+    @OneToMany(
+            targetEntity = Borrowing.class,
+            mappedBy = "reader",
+            cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY
+    )
+    private List<Borrowing> borrowings = new ArrayList<>();
+
+    public Reader(String name, String surname, LocalDate creationDate, List<Borrowing> borrowings) {
+        this.name = name;
+        this.surname = surname;
+        this.creationDate = creationDate;
+        this.borrowings = borrowings;
+    }
 
     @Override
     public int hashCode() {
         int result = getId() != null ? getId().hashCode() : 0;
         result = 31 * result + (getName() != null ? getName().hashCode() : 0);
         result = 31 * result + (getSurname() != null ? getSurname().hashCode() : 0);
-        result = 31 * result + (getDateOfAccountCreation() != null ? getDateOfAccountCreation().hashCode() : 0);
-        result = 31 * result + (getBorrowedBooks() != null ? getBorrowedBooks().hashCode() : 0);
+        result = 31 * result + (getCreationDate() != null ? getCreationDate().hashCode() : 0);
+        result = 31 * result + (getBorrowings() != null ? getBorrowings().hashCode() : 0);
         return result;
     }
 
@@ -45,64 +72,9 @@ public class Reader {
         if (getName() != null ? !getName().equals(reader.getName()) : reader.getName() != null) return false;
         if (getSurname() != null ? !getSurname().equals(reader.getSurname()) : reader.getSurname() != null)
             return false;
-        if (getDateOfAccountCreation() != null ? !getDateOfAccountCreation().equals(reader.getDateOfAccountCreation()) : reader.getDateOfAccountCreation() != null)
+        if (getCreationDate() != null ? !getCreationDate().equals(reader.getCreationDate()) : reader.getCreationDate() != null)
             return false;
-        return getBorrowedBooks() != null ? getBorrowedBooks().equals(reader.getBorrowedBooks()) : reader.getBorrowedBooks() == null;
+        return getBorrowings() != null ? getBorrowings().equals(reader.getBorrowings()) : reader.getBorrowings() == null;
     }
 
-    @Id
-    @GeneratedValue
-    @NotNull
-    @Column(name = "READER_ID", unique = true)
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    @NotNull
-    @Column(name = "NAME")
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    @NotNull
-    @Column(name = "SURNAME")
-    public String getSurname() {
-        return surname;
-    }
-
-    public void setSurname(String surname) {
-        this.surname = surname;
-    }
-
-    @NotNull
-    @Column(name = "ACCOUNT_CREATION_DATE")
-    public LocalDate getDateOfAccountCreation() {
-        return dateOfAccountCreation;
-    }
-
-    public void setDateOfAccountCreation(LocalDate dateOfAccountCreation) {
-        this.dateOfAccountCreation = dateOfAccountCreation;
-    }
-
-    @OneToMany(
-            targetEntity = BorrowedBooks.class,
-            mappedBy = "reader",
-            cascade = CascadeType.ALL,
-            fetch = FetchType.LAZY
-    )
-    public List<BorrowedBooks> getBorrowedBooks() {
-        return borrowedBooks;
-    }
-
-    public void setBorrowedBooks(List<BorrowedBooks> borrowedBooks) {
-        this.borrowedBooks = borrowedBooks;
-    }
 }

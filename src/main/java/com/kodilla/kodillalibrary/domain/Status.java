@@ -9,7 +9,8 @@ public enum Status {
     private Status(String statusCode) {
         this.statusCode = statusCode;
     }
-    public String getStatusCode(){
+
+    public String getStatusCode() {
         return this.statusCode;
     }
 }
