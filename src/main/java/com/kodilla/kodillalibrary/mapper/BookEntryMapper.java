@@ -12,17 +12,35 @@ import java.util.Optional;
 
 @Service
 public class BookEntryMapper {
-    //todo co do autowired nie jestem pewny byc moze trzeba zainicjalizowac poprzez new
-    @Autowired
-    private TitleEntryRepository titleEntryRepository;
-
-    public BookEntry mapToBookEntry(BookEntryDto bookEntryDto) throws TitleEntryNotExistException {
+    public BookEntry mapToBookEntry(BookEntryDto bookEntryDto, TitleEntry titleEntry) {
         BookEntry bookEntry = new BookEntry();
-        TitleEntry titleEntry = titleEntryRepository.findById(bookEntryDto.getTitleEntryId()).orElseThrow(() -> new TitleEntryNotExistException("Book does not exist"));
         bookEntry.setTitleEntry(titleEntry);
         bookEntry.setStatus(bookEntryDto.getStatus());
 
         return bookEntry;
     }
 
+    public BookEntryDto mapToBookEntryDto(final BookEntry bookEntry) {
+        BookEntryDto bookEntryDto = new BookEntryDto();
+        bookEntryDto.setTitleEntryId(bookEntry.getTitleEntry().getId());
+        bookEntryDto.setStatus(bookEntry.getStatus());
+        return bookEntryDto;
+
+//        return new BookEntryDto(
+//                bookEntry.getId(),
+//                bookEntry.getTitleEntry(),
+//                bookEntry.getStatus(),
+//                bookEntry.getBorrowedBooks()
+//        );
+    }
+//    public List<BookEntryDto> mapToBookEntryDtoList(final List<BookEntry> bookEntryList){
+//        return bookEntryList.stream()
+//                .map(this::mapToBookEntryDto)
+//                .collect(Collectors.toList());
+//    }
+//    public List<BookEntry> mapToBookEntryList(final List<BookEntryDto> bookEntryDtoList){
+//        return bookEntryDtoList.stream()
+//                .map(this::mapToBookEntry)
+//                .collect(Collectors.toList());
+//    }
 }

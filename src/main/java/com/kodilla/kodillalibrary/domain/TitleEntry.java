@@ -42,4 +42,6 @@ public class TitleEntry {
     )
     private List<BookEntry> bookEntries;
 
+    public TitleEntry(String title, String author, LocalDate publicationYear, List<BookEntry> bookEntries) {
+    }
 }

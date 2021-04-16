@@ -44,15 +44,17 @@ public class LibraryController {
 
     @PostMapping(value = "createBookEntry", consumes = MediaType.APPLICATION_JSON_VALUE)
     public void createBookEntry(@RequestBody BookEntryDto bookEntryDto) throws TitleEntryNotExistException {
-        BookEntry bookEntry = bookEntryMapper.mapToBookEntry(bookEntryDto);
+
+        TitleEntry titleEntry = service.findTitleEntryById(bookEntryDto.getTitleEntryId()).orElseThrow(()-> new TitleEntryNotExistException("Title entry does not exist"));
+        BookEntry bookEntry = bookEntryMapper.mapToBookEntry(bookEntryDto, titleEntry);
         service.saveBookEntry(bookEntry);
     }
 
-    @PutMapping(value = "updateStatus", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public void updateStatus(@RequestBody BookEntryDto bookEntryDto) throws TitleEntryNotExistException {
-        BookEntry bookEntry = bookEntryMapper.mapToBookEntry(bookEntryDto);
-        BookEntry savedStatus = service.saveBookEntry(bookEntry);
-    }
+//    @PutMapping(value = "updateStatus", consumes = MediaType.APPLICATION_JSON_VALUE)
+//    public void updateStatus(@RequestBody BookEntryDto bookEntryDto) throws TitleEntryNotExistException {
+//        BookEntry bookEntry = bookEntryMapper.mapToBookEntry(bookEntryDto);
+//        BookEntry savedStatus = service.saveBookEntry(bookEntry);
+//    }
 
 //        @GetMapping(value = "howManyBookEntriesAreAvailableById")
 //    public Long howManyBookEntriesAreAvailable(@RequestParam Long id) {

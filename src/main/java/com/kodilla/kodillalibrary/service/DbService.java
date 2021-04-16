@@ -120,8 +120,6 @@ public class DbService {
 //                        .findFirst().get().getRentalDate(),
         // todo na pewno nie get 0
 
-        //           LocalDate.now()); //todo a to co za linika jest?
-
         Borrowing borrowing = bookEntry.getBorrowings()
                 .stream()
                 .filter(b -> b.getReturnDate() == null && b.getReader() == reader)

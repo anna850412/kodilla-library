@@ -36,7 +36,7 @@ public class Borrowing {
     @Column(name = "BORROWING_ID", unique = true)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "BOOK_ENTRY_ID")
     private BookEntry bookEntry;
 
