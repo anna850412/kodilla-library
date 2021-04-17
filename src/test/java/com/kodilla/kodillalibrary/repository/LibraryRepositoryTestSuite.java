@@ -16,7 +16,7 @@ import java.util.Optional;
 @DisplayName("Repository Test Suites")
 public class LibraryRepositoryTestSuite {
     @Autowired
-    private Borrowings borrowings;
+    private BorrowingRepository borrowings;
     @Autowired
     private  TitleEntryRepository titleEntryRepository;
     @Autowired

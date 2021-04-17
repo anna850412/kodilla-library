@@ -62,10 +62,15 @@ public class LibraryControllerTestSuite {
         List<Borrowing> borrowedBooks = new ArrayList<>();
         TitleEntry titleEntry = new TitleEntry("Title", "Author",
                 LocalDate.of(2021, 4, 22), bookEntries);
+        TitleEntryDto titleEntryDto = new TitleEntryDto(1L, "title1", "author1",
+                LocalDate.now(), 3L);
         BookEntry bookEntry = new BookEntry(titleEntry, Status.AVAILABLE, borrowedBooks);
         BookEntryDto bookEntryDto = new BookEntryDto(titleEntry.getId(), bookEntry.getTitleEntry().getId(), Status.AVAILABLE);
         when(bookEntryMapper.mapToBookEntry(ArgumentMatchers.any(BookEntryDto.class), eq(titleEntry))).thenReturn(bookEntry);
         when(bookEntryMapper.mapToBookEntryDto(ArgumentMatchers.any(BookEntry.class))).thenReturn(bookEntryDto);
+        when(titleEntryMapper.mapToTitleEntryDto(ArgumentMatchers.any(TitleEntry.class))).thenReturn(titleEntryDto);
+        when(titleEntryMapper.mapToTitleEntry(ArgumentMatchers.any(TitleEntryDto.class))).thenReturn(titleEntry);
+        service.saveTitle(titleEntry);
         //When
         controller.createBookEntry(bookEntryMapper.mapToBookEntryDto(bookEntry));
         //Then

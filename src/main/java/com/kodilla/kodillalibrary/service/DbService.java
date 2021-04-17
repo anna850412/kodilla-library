@@ -5,7 +5,7 @@ import com.kodilla.kodillalibrary.exception.BookNotExistException;
 import com.kodilla.kodillalibrary.exception.ReaderNotExistException;
 import com.kodilla.kodillalibrary.exception.TitleEntryNotExistException;
 import com.kodilla.kodillalibrary.repository.BookEntryRepository;
-import com.kodilla.kodillalibrary.repository.Borrowings;
+import com.kodilla.kodillalibrary.repository.BorrowingRepository;
 import com.kodilla.kodillalibrary.repository.ReaderRepository;
 import com.kodilla.kodillalibrary.repository.TitleEntryRepository;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +20,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class DbService {
     private final BookEntryRepository bookEntryRepository;
-    private final Borrowings borrowingBooksRepository;
+    private final BorrowingRepository borrowingRepository;
     private final ReaderRepository readerRepository;
     private final TitleEntryRepository titleEntryRepository;
 
@@ -41,95 +41,47 @@ public class DbService {
     }
 
     public Borrowing saveBorrowing(Borrowing borrowing) {
-        return borrowingBooksRepository.save(borrowing);
-    }
-
-    public Optional<BookEntry> findBookEntryById(Long id) {
-        return bookEntryRepository.findById(id);
+        return borrowingRepository.save(borrowing);
     }
 
     public Optional<TitleEntry> findTitleEntryById(Long id) {
         return titleEntryRepository.findById(id);
     }
 
-    public TitleEntry findTitleEntryByTileAndAuthor(String title, String author) {
-        return titleEntryRepository.findByTitleAndAuthor(title, author);
-    }
-
-    public void setBookEntryStatus(Status status, Long id) throws BookNotExistException {
-        bookEntryRepository.findById(id)
-                .orElseThrow(() -> new BookNotExistException("Book does not exist"))
-                .setStatus(status);
-    }
-
-    //    sprawdzenie ilości egzemplarzy danego tytułu dostępnych do wypożyczenia,
     public Long getNumberOfAvailableBooksByTitleEntry(String title, String author) {
         TitleEntry titleEntry = titleEntryRepository.findByTitleAndAuthor(title, author);
         return bookEntryRepository.findByTitleEntryAndStatus(titleEntry, Status.AVAILABLE).stream().count();
     }
 
-    //    wypożyczenie książki,
-    public void findAvailableBooksToBeBorrowedByTitle(TitleEntry titleEntry) throws BookNotExistException {
-        bookEntryRepository.findByTitleEntryAndStatus(titleEntry, Status.AVAILABLE).stream()
-                .findFirst()
-                .orElseThrow(() -> new BookNotExistException("Book does not exist"))
-                .setStatus(Status.BORROWED);
-    }
-
     @SneakyThrows
     public void rentBook(BookRentalDto bookRentalDto) {
-        TitleEntry titleEntry = findTitleEntryById(bookRentalDto.getTitleId()).orElseThrow(() -> new TitleEntryNotExistException("Title Entry doesn't exist"));
+        TitleEntry titleEntry = findTitleEntryById(bookRentalDto.getTitleId()).orElseThrow(() -> new TitleEntryNotExistException("Title Entry not exist in our library"));
         BookEntry availableBookEntry = bookEntryRepository.findByTitleEntryAndStatus(
                 titleEntry, Status.AVAILABLE).stream()
                 .findFirst().orElseThrow(() -> new BookNotExistException("No available book entry for this title"));
-        Reader reader = readerRepository.findById(bookRentalDto.getReaderId()).orElseThrow(() -> new ReaderNotExistException("Reader not exist on library"));
-
+        Reader reader = readerRepository.findById(bookRentalDto.getReaderId()).orElseThrow(() -> new ReaderNotExistException("Reader not exist in our library"));
         availableBookEntry.setStatus(Status.BORROWED);
         Borrowing borrowing = new Borrowing(availableBookEntry, reader, LocalDate.now(), null);
-
         reader.getBorrowings().add(borrowing);
         availableBookEntry.getBorrowings().add(borrowing);
         saveReader(reader);
         saveBookEntry(availableBookEntry);
-        saveBorrowing(borrowing); //todo te trzy rzeczy powinny isc w jednej transakcji.
+        saveBorrowing(borrowing);
 
     }
 
     @SneakyThrows
     public void returnBook(ReturnBookDto returnBookDto) {
-        //   TitleEntry titleEntry = findTitleEntryById(returnBookDto.getBookEntryId()).orElseThrow(() -> new TitleEntryNotExistException("Title Entry doesn't exist"));
-        // todo to jest złe. nie mozesz szukac titleEntry po BookEntryID. po pierwsze a po drugie to TitleEntry Ci tu w ogole nie jest potrzebne bo przeciez zwracasz ksiazke bookEntry a nie tytuł title entry
-        BookEntry bookEntry = bookEntryRepository.findById(returnBookDto.getBookEntryId()).orElseThrow(() -> new BookNotExistException("Nie ma ksisazki o takim id w naszej bibliotece"));
 
-        Reader reader = readerRepository.findById(returnBookDto.getReaderId()).orElseThrow(() -> new ReaderNotExistException("Reader not exist on library"));
-
-//        BookEntry rentedBookEntry = bookEntryRepository.findByTitleEntryAndStatus(
-//                titleEntry, Status.BORROWED).
-//                stream().
-//                findFirst().orElseThrow(() -> new BookNotExistException("No available book entry for this title"));
-        // todo po co to skoro wiesz jaka ksiazke oddajesz masz jej id w retudnBookDTO
-//
+        BookEntry bookEntry = bookEntryRepository.findById(returnBookDto.getBookEntryId()).orElseThrow(() -> new BookNotExistException("Book Entry with this id not exist in our library "));
+        Reader reader = readerRepository.findById(returnBookDto.getReaderId()).orElseThrow(() -> new ReaderNotExistException("Reader not exist in our library"));
         bookEntry.setStatus(Status.AVAILABLE);
-        //   Borrowing borrowing = new Borrowing(rentedBookEntry, reader,
-        // todo tak jak pisałem nie tworzysz nowego borrowing, tylko na tym co jest przypisane do ksiazki ustawiasz date zwrotu
-
-//            reader.getBorrowings().get(0).getRentalDate() ,
-//                bookEntry.getBorrowings().stream()
-//                        .filter(borrowing1 -> borrowing1.getReader().getId().equals(returnBookDto.getReaderId()))
-//                        .filter(borrowing1 -> borrowing1.getReturnDate().isBefore(LocalDate.now()))
-//                        .findFirst().get().getRentalDate(),
-        // todo na pewno nie get 0
-
-        Borrowing borrowing = bookEntry.getBorrowings()
+        Borrowing borrowing =
+                bookEntry.getBorrowings()
                 .stream()
                 .filter(b -> b.getReturnDate() == null && b.getReader() == reader)
                 .findFirst().get();
-
         borrowing.setReturnDate(LocalDate.now());
-
-//        reader.getBorrowings().add(borrowing);
-//        rentedBookEntry.getBorrowings().add(borrowing);
-     //   saveReader(reader); //todo chyba nie potrzebne bo na readerze nic nie zmienialismy
         saveBookEntry(bookEntry);
         saveBorrowing(borrowing);
     }
