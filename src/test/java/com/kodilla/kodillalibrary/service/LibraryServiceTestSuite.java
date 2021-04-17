@@ -7,6 +7,7 @@ import com.kodilla.kodillalibrary.repository.BookEntryRepository;
 import com.kodilla.kodillalibrary.repository.BorrowingRepository;
 import com.kodilla.kodillalibrary.repository.ReaderRepository;
 import com.kodilla.kodillalibrary.repository.TitleEntryRepository;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
