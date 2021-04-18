@@ -3,6 +3,7 @@ package com.kodilla.kodillalibrary.mapper;
 import com.kodilla.kodillalibrary.domain.BookEntry;
 import com.kodilla.kodillalibrary.domain.BookEntryDto;
 import com.kodilla.kodillalibrary.domain.TitleEntry;
+import com.kodilla.kodillalibrary.domain.TitleEntryDto;
 import com.kodilla.kodillalibrary.exception.TitleEntryNotExistException;
 import com.kodilla.kodillalibrary.repository.TitleEntryRepository;
 import org.springframework.beans.factory.annotation.Autowired;

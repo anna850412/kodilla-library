@@ -44,4 +44,29 @@ public class TitleEntry {
 
     public TitleEntry(String title, String author, LocalDate publicationYear, List<BookEntry> bookEntries) {
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof TitleEntry)) return false;
+
+        TitleEntry that = (TitleEntry) o;
+
+        if (getId() != null ? !getId().equals(that.getId()) : that.getId() != null) return false;
+        if (getTitle() != null ? !getTitle().equals(that.getTitle()) : that.getTitle() != null) return false;
+        if (getAuthor() != null ? !getAuthor().equals(that.getAuthor()) : that.getAuthor() != null) return false;
+        if (getPublicationYear() != null ? !getPublicationYear().equals(that.getPublicationYear()) : that.getPublicationYear() != null)
+            return false;
+        return getBookEntries() != null ? getBookEntries().equals(that.getBookEntries()) : that.getBookEntries() == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = getId() != null ? getId().hashCode() : 0;
+        result = 31 * result + (getTitle() != null ? getTitle().hashCode() : 0);
+        result = 31 * result + (getAuthor() != null ? getAuthor().hashCode() : 0);
+        result = 31 * result + (getPublicationYear() != null ? getPublicationYear().hashCode() : 0);
+        result = 31 * result + (getBookEntries() != null ? getBookEntries().hashCode() : 0);
+        return result;
+    }
 }

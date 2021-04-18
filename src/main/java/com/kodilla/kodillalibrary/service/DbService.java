@@ -1,8 +1,9 @@
 package com.kodilla.kodillalibrary.service;
 
 import com.kodilla.kodillalibrary.domain.*;
-import com.kodilla.kodillalibrary.exception.BookNotExistException;
+import com.kodilla.kodillalibrary.exception.BookEntryNotExistException;
 import com.kodilla.kodillalibrary.exception.ReaderNotExistException;
+import com.kodilla.kodillalibrary.exception.ReturnBookNotExistException;
 import com.kodilla.kodillalibrary.exception.TitleEntryNotExistException;
 import com.kodilla.kodillalibrary.repository.BookEntryRepository;
 import com.kodilla.kodillalibrary.repository.BorrowingRepository;
@@ -58,7 +59,7 @@ public class DbService {
         TitleEntry titleEntry = findTitleEntryById(bookRentalDto.getTitleId()).orElseThrow(() -> new TitleEntryNotExistException("Title Entry not exist in our library"));
         BookEntry availableBookEntry = bookEntryRepository.findByTitleEntryAndStatus(
                 titleEntry, Status.AVAILABLE).stream()
-                .findFirst().orElseThrow(() -> new BookNotExistException("No available book entry for this title"));
+                .findFirst().orElseThrow(() -> new BookEntryNotExistException("No available book entry for this title"));
         Reader reader = readerRepository.findById(bookRentalDto.getReaderId()).orElseThrow(() -> new ReaderNotExistException("Reader not exist in our library"));
         availableBookEntry.setStatus(Status.BORROWED);
         Borrowing borrowing = new Borrowing(availableBookEntry, reader, LocalDate.now(), null);
@@ -73,14 +74,16 @@ public class DbService {
     @SneakyThrows
     public void returnBook(ReturnBookDto returnBookDto) {
 
-        BookEntry bookEntry = bookEntryRepository.findById(returnBookDto.getBookEntryId()).orElseThrow(() -> new BookNotExistException("Book Entry with this id not exist in our library "));
+        BookEntry bookEntry = bookEntryRepository.findById(returnBookDto.getBookEntryId()).orElseThrow(() -> new BookEntryNotExistException("Book Entry with this id not exist in our library "));
         Reader reader = readerRepository.findById(returnBookDto.getReaderId()).orElseThrow(() -> new ReaderNotExistException("Reader not exist in our library"));
         bookEntry.setStatus(Status.AVAILABLE);
         Borrowing borrowing =
                 bookEntry.getBorrowings()
                 .stream()
                 .filter(b -> b.getReturnDate() == null && b.getReader() == reader)
-                .findFirst().get();
+                .findFirst()
+//                        .get();
+                        .orElseThrow(()-> new ReturnBookNotExistException("Return book don't exist"));
         borrowing.setReturnDate(LocalDate.now());
         saveBookEntry(bookEntry);
         saveBorrowing(borrowing);

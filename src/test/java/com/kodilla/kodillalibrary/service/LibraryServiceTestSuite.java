@@ -1,7 +1,7 @@
 package com.kodilla.kodillalibrary.service;
 
 import com.kodilla.kodillalibrary.domain.*;
-import com.kodilla.kodillalibrary.exception.BookNotExistException;
+import com.kodilla.kodillalibrary.exception.BookEntryNotExistException;
 import com.kodilla.kodillalibrary.exception.TitleEntryNotExistException;
 import com.kodilla.kodillalibrary.repository.BookEntryRepository;
 import com.kodilla.kodillalibrary.repository.BorrowingRepository;
@@ -140,7 +140,7 @@ public class LibraryServiceTestSuite {
     }
 
     @Test
-    void testRentBook() throws BookNotExistException {
+    void testRentBook() throws BookEntryNotExistException {
         //Given
         List<BookEntry> bookEntries = new ArrayList<>();
         BookRentalDto bookRentalDto = new BookRentalDto(1L, 1L);

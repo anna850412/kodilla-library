@@ -1,7 +1,7 @@
 package com.kodilla.kodillalibrary.controller;
 
 import com.kodilla.kodillalibrary.domain.*;
-import com.kodilla.kodillalibrary.exception.BookNotExistException;
+import com.kodilla.kodillalibrary.exception.BookEntryNotExistException;
 import com.kodilla.kodillalibrary.exception.ReturnBookNotExistException;
 import com.kodilla.kodillalibrary.exception.TitleEntryNotExistException;
 import com.kodilla.kodillalibrary.mapper.BookEntryMapper;
@@ -13,7 +13,6 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/v1/library")
@@ -43,9 +42,10 @@ public class LibraryController {
     }
 
     @PostMapping(value = "createBookEntry", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public void createBookEntry(@RequestBody BookEntryDto bookEntryDto) throws TitleEntryNotExistException {
+    public void createBookEntry(@RequestBody BookEntryDto bookEntryDto) throws BookEntryNotExistException, TitleEntryNotExistException {
 
-        TitleEntry titleEntry = service.findTitleEntryById(bookEntryDto.getTitleEntryId()).orElseThrow(()-> new TitleEntryNotExistException("Title entry does not exist"));
+        TitleEntry titleEntry = service.findTitleEntryById(bookEntryDto.getTitleEntryId()).orElseThrow(
+                ()-> new TitleEntryNotExistException("Title entry does not exist"));
         BookEntry bookEntry = bookEntryMapper.mapToBookEntry(bookEntryDto, titleEntry);
         service.saveBookEntry(bookEntry);
     }
@@ -68,7 +68,7 @@ public class LibraryController {
     }
 
     @PutMapping(value = "rentBook", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public void rentABook(@RequestBody BookRentalDto bookRentalDto) throws BookNotExistException {
+    public void rentABook(@RequestBody BookRentalDto bookRentalDto) throws BookEntryNotExistException {
         service.rentBook(bookRentalDto);
     }
 
