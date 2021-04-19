@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -64,6 +65,7 @@ public class LibraryServiceTestSuite {
         TitleEntry titleEntry2 = new TitleEntry("title2", "author2", LocalDate.now(), bookEntries);
         allEntries.add(titleEntry1);
         allEntries.add(titleEntry2);
+        when(service.findAllTitleEntries()).thenReturn(allEntries);
         //When
         allEntries = service.findAllTitleEntries();
         //Then
@@ -169,20 +171,29 @@ public class LibraryServiceTestSuite {
         ReturnBookDto returnBookDto = new ReturnBookDto(1L, 1L);
         TitleEntry titleEntry = new TitleEntry("Title", "Author",
                 LocalDate.of(2010, 11, 4), bookEntries);
-        BookEntry bookEntry = new BookEntry(titleEntry, Status.BORROWED, borrowings);
+        BookEntry bookEntry = Mockito.mock(BookEntry.class);
+        when(bookEntry.getTitleEntry()).thenReturn(titleEntry);
+        when(bookEntry.getStatus()).thenReturn(Status.BORROWED);
         Reader reader = new Reader("Anna", "Kowalska",
                 LocalDate.of(2020, 11, 11), borrowings);
         BookEntry borrowedBookEntry = new BookEntry(titleEntry, Status.BORROWED, borrowings);
         when(bookEntryRepository.findByTitleEntryAndStatus(titleEntry, Status.BORROWED)).thenReturn(Arrays.asList(borrowedBookEntry));
         when(bookEntryRepository.findById(returnBookDto.getBookEntryId())).thenReturn(Optional.of(bookEntry));
         when(readerRepository.findById(returnBookDto.getReaderId())).thenReturn(Optional.of(reader));
+        Borrowing borrowing = Mockito.mock(Borrowing.class);
+        when(borrowing.getReader()).thenReturn(reader);
+        when(borrowing.getBookEntry()).thenReturn(bookEntry);
+        when(borrowing.getRentalDate()).thenReturn(LocalDate.of(2020, 11, 11));
+        when(borrowing.getReturnDate()).thenReturn(null);
+        borrowings.add(borrowing);
+        when(bookEntry.getBorrowings()).thenReturn(borrowings);
         //When
         service.returnBook(returnBookDto);
         //Then
-        verify(bookEntryRepository, times(1)).findByTitleEntryAndStatus(titleEntry, Status.BORROWED);
-        verify(readerRepository, times(1)).findById(returnBookDto.getReaderId());
-        verify(bookEntryRepository, times(1)).findById(returnBookDto.getBookEntryId());
+        verify(borrowing, times(1)).setReturnDate(LocalDate.now());
+        verify(bookEntry, times(1)).setStatus(Status.AVAILABLE);
         Assertions.assertEquals(1L, returnBookDto.getBookEntryId());
+        Assertions.assertEquals(1L, returnBookDto.getReaderId());
     }
 }
 

@@ -79,11 +79,11 @@ public class DbService {
         bookEntry.setStatus(Status.AVAILABLE);
         Borrowing borrowing =
                 bookEntry.getBorrowings()
-                .stream()
-                .filter(b -> b.getReturnDate() == null && b.getReader() == reader)
-                .findFirst()
+                        .stream()
+                        .filter(b -> b.getReturnDate() == null && b.getReader() == reader)
+                        .findFirst()
 //                        .get();
-                        .orElseThrow(()-> new ReturnBookNotExistException("Return book don't exist"));
+                        .orElseThrow(() -> new ReturnBookNotExistException("Return book don't exist"));
         borrowing.setReturnDate(LocalDate.now());
         saveBookEntry(bookEntry);
         saveBorrowing(borrowing);

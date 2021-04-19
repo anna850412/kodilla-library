@@ -62,24 +62,11 @@ public class LibraryRepositoryTestSuite {
     @Test
     void testReaderRepositorySaveWithReader() {
         //Given
-//        BookEntry bookEntries = new BookEntry();
         List<Borrowing> borrowedBooks = new ArrayList<>();
         Reader reader1 = new Reader("Anna", "Kowalska",
                 LocalDate.of(2019, 3, 12), borrowedBooks);
-//        borrowedBooks.add(new Borrowing(bookEntries, reader1,
-//                LocalDate.of(2021, 1, 15), LocalDate.of(2021, 3, 5)));
         Reader reader2 = new Reader("Piotr", "Nowak",
                 LocalDate.of(2018, 6, 23), borrowedBooks);
-//        borrowedBooks.add(new Borrowing(bookEntries, reader2, LocalDate.of(2020, 7, 27),
-//                LocalDate.of(2020, 11, 11)));
-//        Borrowing borrowedBooks1 = new Borrowing(bookEntries, reader1,
-//                LocalDate.of(2021, 3, 10), null);
-//        Borrowing borrowedBooks2 = new Borrowing(bookEntries, reader2,
-//                LocalDate.of(2021, 2, 10), LocalDate.of(2021, 3, 11));
-//        borrowedBooks.add(borrowedBooks1);
-//        borrowedBooks.add(borrowedBooks2);
-//        reader1.getBorrowings().add(borrowedBooks1);
-//        reader2.getBorrowings().add(borrowedBooks2);
         //When
         readerRepository.save(reader1);
         Long id1 = reader1.getId();
@@ -106,8 +93,6 @@ public class LibraryRepositoryTestSuite {
         BookEntry bookEntry2 = new BookEntry(title2, Status.RESERVED, borrowedBooks);
         bookEntry1.setTitleEntry(title1);
         bookEntry2.setTitleEntry(title2);
-//        title1.getBookEntries().add(bookEntry1);
-//        title2.getBookEntries().add(bookEntry2);
         //When
         titleEntryRepository.save(title1);
         Long id1 = title1.getId();
@@ -131,7 +116,6 @@ public class LibraryRepositoryTestSuite {
         BookEntry bookEntry1 = new BookEntry(title1, Status.BORROWED, borrowedBooks);
         bookEntries.add(bookEntry1);
         bookEntry1.setTitleEntry(title1);
-//        title1.getBookEntries().add(bookEntry1);
         //When
         bookEntryRepository.save(bookEntry1);
         Long id1 = bookEntry1.getId();
@@ -213,21 +197,16 @@ public class LibraryRepositoryTestSuite {
                 LocalDate.of(2021, 1, 15), LocalDate.of(2021, 3, 5));
         Borrowing borrowedBook2 = new Borrowing(bookEntry2, reader2, LocalDate.of(2020, 7, 27),
                 LocalDate.of(2020, 11, 11));
-
         borrowedBook1.setBookEntry(bookEntry1);
         borrowedBook2.setBookEntry(bookEntry2);
-
-
         //When
         borrowings.save(borrowedBook1);
         Long id1 = borrowedBook1.getId();
         borrowings.save(borrowedBook2);
         Long id2 = borrowedBook2.getId();
-
         //Then
         Assertions.assertNotEquals(0, id1);
         Assertions.assertNotEquals(0, id2);
-
         //Clean up
         borrowings.deleteById(id1);
         borrowings.deleteById(id2);

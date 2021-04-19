@@ -50,18 +50,6 @@ public class LibraryController {
         service.saveBookEntry(bookEntry);
     }
 
-//    @PutMapping(value = "updateStatus", consumes = MediaType.APPLICATION_JSON_VALUE)
-//    public void updateStatus(@RequestBody BookEntryDto bookEntryDto) throws TitleEntryNotExistException {
-//        BookEntry bookEntry = bookEntryMapper.mapToBookEntry(bookEntryDto);
-//        BookEntry savedStatus = service.saveBookEntry(bookEntry);
-//    }
-
-//        @GetMapping(value = "howManyBookEntriesAreAvailableById")
-//    public Long howManyBookEntriesAreAvailable(@RequestParam Long id) {
-//            Optional<TitleEntry> titleById = service.findTitleEntryById(id);
-//            return service.getNumberOfAvailableBooksById(titleById);
-//        }
-
     @GetMapping(value = "howManyBookEntriesAreAvailableByTitleAndAuthor")
     public Long howManyBookEntriesAreAvailable(@RequestParam String title, String author) {
         return service.getNumberOfAvailableBooksByTitleEntry(title, author);
@@ -76,4 +64,11 @@ public class LibraryController {
     public void returnOfBook(@RequestBody ReturnBookDto returnBookDto) throws ReturnBookNotExistException {
         service.returnBook(returnBookDto);
     }
+
+
+//        @GetMapping(value = "howManyBookEntriesAreAvailableById")
+//    public Long howManyBookEntriesAreAvailable(@RequestParam Long id) {
+//            Optional<TitleEntry> titleById = service.findTitleEntryById(id);
+//            return service.getNumberOfAvailableBooksById(titleById);
+//        }
 }

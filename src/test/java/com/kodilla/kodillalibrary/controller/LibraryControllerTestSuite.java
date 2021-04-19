@@ -15,12 +15,14 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.*;
@@ -45,7 +47,7 @@ public class LibraryControllerTestSuite {
     public void shouldFindAll() {
         //Given
         List<TitleEntryDto> entries = List.of(
-                new TitleEntryDto(1L, "title1", "author1", LocalDate.now(), 3L),
+                new TitleEntryDto(1L,"title1", "author1", LocalDate.now(), 3L),
                 new TitleEntryDto(2L, "title2", "author2", LocalDate.now(), 3L)
         );
         when(titleEntryMapper.mapToTitleEntriesDtoList(anyList())).thenReturn(entries);
@@ -62,17 +64,14 @@ public class LibraryControllerTestSuite {
         List<Borrowing> borrowedBooks = new ArrayList<>();
         TitleEntry titleEntry = new TitleEntry("Title", "Author",
                 LocalDate.of(2021, 4, 22), bookEntries);
-//        TitleEntryDto titleEntryDto = new TitleEntryDto(1L, "title1", "author1",
-//                LocalDate.now(), 3L);
         BookEntry bookEntry = new BookEntry(titleEntry, Status.AVAILABLE, borrowedBooks);
-        BookEntryDto bookEntryDto = new BookEntryDto(titleEntry.getId(), bookEntry.getTitleEntry().getId(), Status.AVAILABLE);
+        BookEntryDto bookEntryDto = new BookEntryDto(bookEntry.getTitleEntry().getId(), Status.AVAILABLE);
         when(bookEntryMapper.mapToBookEntry(ArgumentMatchers.any(BookEntryDto.class), eq(titleEntry))).thenReturn(bookEntry);
         when(bookEntryMapper.mapToBookEntryDto(ArgumentMatchers.any(BookEntry.class))).thenReturn(bookEntryDto);
-//        when(titleEntryMapper.mapToTitleEntryDto(ArgumentMatchers.any(TitleEntry.class))).thenReturn(titleEntryDto);
-//        when(titleEntryMapper.mapToTitleEntry(ArgumentMatchers.any(TitleEntryDto.class))).thenReturn(titleEntry);
-//        service.saveTitle(titleEntry);
+        service.saveTitle(titleEntry);
+        when(service.findTitleEntryById(titleEntry.getId())).thenReturn(Optional.of(titleEntry));
         //When
-        controller.createBookEntry(bookEntryMapper.mapToBookEntryDto(bookEntry));
+        controller.createBookEntry(bookEntryDto);
         //Then
         verify(service, times(1)).saveBookEntry(bookEntry);
     }
@@ -80,11 +79,8 @@ public class LibraryControllerTestSuite {
     @Test
     void testCreateReader() {
         //Given
-        List<Borrowing> borrowedBooks = new ArrayList<>();
-        Reader reader = new Reader("Ala", "Wilk",
-                LocalDate.of(2018, 4, 23), borrowedBooks);
-        ReaderDto readerDto = new ReaderDto(1L, "Ala", "Wilk",
-                LocalDate.of(2018, 4, 23));
+        Reader reader = Mockito.mock(Reader.class);
+        ReaderDto readerDto = Mockito.mock(ReaderDto.class);
         when(readerMapper.mapToReader(ArgumentMatchers.any(ReaderDto.class))).thenReturn(reader);
         when(readerMapper.mapToReaderDto(ArgumentMatchers.any(Reader.class))).thenReturn(readerDto);
         //When
@@ -100,7 +96,7 @@ public class LibraryControllerTestSuite {
         List<BookEntry> bookEntries = new ArrayList<>();
         TitleEntry titleEntry = new TitleEntry("test Title", "test Author",
                 LocalDate.of(2010, 9, 11), bookEntries);
-        TitleEntryDto titleEntryDto = new TitleEntryDto(2L, "test Title", "test Author",
+        TitleEntryDto titleEntryDto = new TitleEntryDto(1L, "test Title", "test Author",
                 LocalDate.of(2010, 9, 11), 11L);
         when(titleEntryMapper.mapToTitleEntry(ArgumentMatchers.any(TitleEntryDto.class))).thenReturn(titleEntry);
         when(titleEntryMapper.mapToTitleEntryDto(ArgumentMatchers.any(TitleEntry.class))).thenReturn(titleEntryDto);
