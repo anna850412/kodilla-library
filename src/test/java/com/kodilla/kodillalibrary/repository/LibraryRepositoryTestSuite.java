@@ -87,7 +87,11 @@ public class LibraryRepositoryTestSuite {
         Long id2 = reader2.getId();
         //Then
         Assertions.assertNotEquals(0, id1);
+
         Assertions.assertNotEquals(0, id2);
+        Reader result1 = readerRepository.findById(id1).get();
+        Assertions.assertEquals("Piotr",result1.getName());
+
         //Clean up
         readerRepository.deleteById(id1);
         readerRepository.deleteById(id2);

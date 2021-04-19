@@ -7,6 +7,8 @@ import com.kodilla.kodillalibrary.exception.TitleEntryNotExistException;
 import com.kodilla.kodillalibrary.mapper.BookEntryMapper;
 import com.kodilla.kodillalibrary.mapper.ReaderMapper;
 import com.kodilla.kodillalibrary.mapper.TitleEntryMapper;
+import com.kodilla.kodillalibrary.repository.BookEntryRepository;
+import com.kodilla.kodillalibrary.repository.ReaderRepository;
 import com.kodilla.kodillalibrary.service.DbService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -15,11 +17,14 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.anyList;
@@ -29,6 +34,7 @@ import static org.mockito.Mockito.*;
 @ExtendWith(SpringExtension.class)
 @DisplayName("Library Controller Test Suite")
 public class LibraryControllerTestSuite {
+
 
     @Mock
     private TitleEntryMapper titleEntryMapper;
@@ -40,7 +46,6 @@ public class LibraryControllerTestSuite {
     private DbService service;
     @InjectMocks
     private LibraryController controller;
-
     @Test
     public void shouldFindAll() {
         //Given
@@ -59,36 +64,36 @@ public class LibraryControllerTestSuite {
     void testCreateBookEntry() throws BookEntryNotExistException, TitleEntryNotExistException {
         //Given
         List<BookEntry> bookEntries = new ArrayList<>();
-        List<Borrowing> borrowedBooks = new ArrayList<>();
+        List<Borrowing> borrowings = new ArrayList<>();
         TitleEntry titleEntry = new TitleEntry("Title", "Author",
                 LocalDate.of(2021, 4, 22), bookEntries);
-//        TitleEntryDto titleEntryDto = new TitleEntryDto(1L, "title1", "author1",
-//                LocalDate.now(), 3L);
-        BookEntry bookEntry = new BookEntry(titleEntry, Status.AVAILABLE, borrowedBooks);
-        BookEntryDto bookEntryDto = new BookEntryDto(titleEntry.getId(), bookEntry.getTitleEntry().getId(), Status.AVAILABLE);
+
+        TitleEntryDto titleEntryDto = new TitleEntryDto(1L, "title1", "author1",
+                LocalDate.now(), 3L);
+        BookEntry bookEntry = new BookEntry(titleEntry, Status.AVAILABLE, borrowings);
+        BookEntryDto bookEntryDto = new BookEntryDto(titleEntry.getId(), Status.AVAILABLE);
         when(bookEntryMapper.mapToBookEntry(ArgumentMatchers.any(BookEntryDto.class), eq(titleEntry))).thenReturn(bookEntry);
         when(bookEntryMapper.mapToBookEntryDto(ArgumentMatchers.any(BookEntry.class))).thenReturn(bookEntryDto);
-//        when(titleEntryMapper.mapToTitleEntryDto(ArgumentMatchers.any(TitleEntry.class))).thenReturn(titleEntryDto);
-//        when(titleEntryMapper.mapToTitleEntry(ArgumentMatchers.any(TitleEntryDto.class))).thenReturn(titleEntry);
-//        service.saveTitle(titleEntry);
+        when(titleEntryMapper.mapToTitleEntryDto(ArgumentMatchers.any(TitleEntry.class))).thenReturn(titleEntryDto);
+        when(titleEntryMapper.mapToTitleEntry(ArgumentMatchers.any(TitleEntryDto.class))).thenReturn(titleEntry);
+        service.saveTitle(titleEntry);
+        when(service.findTitleEntryById(titleEntry.getId())).thenReturn(java.util.Optional.of(titleEntry));
         //When
         controller.createBookEntry(bookEntryMapper.mapToBookEntryDto(bookEntry));
+
         //Then
+
         verify(service, times(1)).saveBookEntry(bookEntry);
     }
 
     @Test
     void testCreateReader() {
         //Given
-        List<Borrowing> borrowedBooks = new ArrayList<>();
-        Reader reader = new Reader("Ala", "Wilk",
-                LocalDate.of(2018, 4, 23), borrowedBooks);
-        ReaderDto readerDto = new ReaderDto(1L, "Ala", "Wilk",
-                LocalDate.of(2018, 4, 23));
-        when(readerMapper.mapToReader(ArgumentMatchers.any(ReaderDto.class))).thenReturn(reader);
-        when(readerMapper.mapToReaderDto(ArgumentMatchers.any(Reader.class))).thenReturn(readerDto);
+        Reader reader = Mockito.mock(Reader.class);
+        ReaderDto readerDto = Mockito.mock(ReaderDto.class);
+        when(readerMapper.mapToReader(readerDto)).thenReturn(reader);
         //When
-        controller.createReader(readerMapper.mapToReaderDto(reader));
+        controller.createReader(readerDto);
         //Then
         verify(service, times(1)).saveReader(reader);
     }
